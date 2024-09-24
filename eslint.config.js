@@ -5,6 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
+import tailwindcss from 'eslint-plugin-tailwindcss';
 
 const config = [
   js.configs.recommended,
@@ -20,6 +21,7 @@ const config = [
       'react-refresh': reactRefresh,
       '@typescript-eslint': typescriptEslint,
       prettier,
+      tailwindcss,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -31,6 +33,7 @@ const config = [
       '@typescript-eslint/no-unused-vars': ['warn'],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': 1,
+      'tailwindcss/classnames-order': 'warn',
     },
   },
   {
