@@ -6,17 +6,14 @@ import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import prettier from 'eslint-plugin-prettier';
 
-// Configuración de ESLint en formato plano
 const config = [
-  // Reglas recomendadas de ESLint
   js.configs.recommended,
-  // Reglas recomendadas de TypeScript
   {
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-      parser: typescriptParser, // Usar el parser de TypeScript
+      parser: typescriptParser,
     },
     plugins: {
       'react-hooks': reactHooks,
@@ -31,11 +28,10 @@ const config = [
         { allowConstantExport: true },
       ],
       'prettier/prettier': 'error',
-      '@typescript-eslint/no-unused-vars': ['warn'], // Ejemplo de regla
-      '@typescript-eslint/explicit-module-boundary-types': 'off', // Ajusta según tus necesidades
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
     },
   },
-  // Configuración de Prettier
   {
     plugins: { prettier },
     rules: {
