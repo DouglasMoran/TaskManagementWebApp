@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'SF Pro Display';
+  font-weight: 400;
+  src: url('/assets/fonts/SFProDisplay-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  font-weight: 700;
+  src: url('/assets/fonts/SFProDisplay-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 400;
+  src: url('/assets/fonts/OpenSans-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 700;
+  src: url('/assets/fonts/OpenSans-SemiBold.ttf') format('truetype');
+}
+
+/* Add more weights and styles as needed */
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

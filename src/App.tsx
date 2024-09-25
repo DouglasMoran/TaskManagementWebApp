@@ -16,7 +16,9 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1 className="text-[100px]">Vite + React</h1>
+      <h1 className="font-sf text-[100px] font-extrabold text-tertiary-4">
+        Vite + React
+      </h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
@@ -31,5 +33,4 @@ function App() {
     </>
   );
 }
-
 export default App;
