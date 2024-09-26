@@ -26,8 +26,7 @@ const AppRouter = () => {
     <Router>
       <ErrorBoundary
         FallbackComponent={ErrorBoundaryFallback}
-        onReset={(details) => {
-          console.log('ERROR BOUNDARY ::: METADATA ::: DETAILS :::', details);
+        onReset={() => {
           <Navigate to={ONBOARDING} />;
         }}
       >

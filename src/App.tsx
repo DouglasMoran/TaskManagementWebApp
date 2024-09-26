@@ -1,5 +1,5 @@
-import { AppRouter } from './routes';
+import Providers from '@routes/Providers';
 
-const App = () => <AppRouter />;
+const App = () => <Providers />;
 
 export default App;

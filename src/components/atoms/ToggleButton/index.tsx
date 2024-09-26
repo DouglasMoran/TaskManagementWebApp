@@ -1,46 +1,52 @@
+import { useSelector } from 'react-redux';
+
 import IconButton from '@components/atoms/IconButton';
 
 import HamburgerMenuIcon from '@utils/icons/HamburgerMenuIcon';
+
+import { setTaskViewType } from '@store/slices/task/taskSlice';
+import { MainState, useAppDispatch } from '@store/index';
+
 import GridIcon from '@utils/icons/GridIcon';
 
-type ToggleButtonPropsType = {
-  value: number;
-  // eslint-disable-next-line no-unused-vars
-  onSelect: (value: number) => void;
-};
+import { TASK_VIEW } from '@constants/app';
 
-const ToggleButton = ({ value, onSelect }: ToggleButtonPropsType) => {
-  const [selected, unselected] = [1, 0];
+const ToggleButton = () => {
+  const dispatch = useAppDispatch();
+
+  const { viewType } = useSelector((state: MainState) => state.task);
+
+  const isBoardView = viewType === TASK_VIEW.BOARD;
 
   return (
     <div className="flex flex-row">
       <IconButton
         type="outline"
-        contentStyles={`${value === unselected && 'border'} border-primary-4 hover:border-neutral-1`}
+        contentStyles={`${!isBoardView && 'border'} border-primary-4 hover:border-neutral-1`}
         icon={
           <HamburgerMenuIcon
             svgClassName={
-              value === unselected
+              !isBoardView
                 ? 'text-primary-4 hover:text-neutral-1'
                 : 'text-neutral-1'
             }
           />
         }
-        onClick={() => onSelect(0)}
+        onClick={() => dispatch(setTaskViewType(TASK_VIEW.LIST))}
       />
       <IconButton
         type="outline"
-        contentStyles={`${value === selected && 'border'} border-primary-4 hover:border-neutral-1`}
+        contentStyles={`${isBoardView && 'border'} border-primary-4 hover:border-neutral-1`}
         icon={
           <GridIcon
             svgClassName={
-              value === selected
+              isBoardView
                 ? 'text-primary-4 hover:text-neutral-1'
                 : 'text-neutral-1'
             }
           />
         }
-        onClick={() => onSelect(1)}
+        onClick={() => dispatch(setTaskViewType(TASK_VIEW.BOARD))}
       />
     </div>
   );

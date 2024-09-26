@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import { useSelector } from 'react-redux';
 
 import SidebarItem from '@components/molecules/SidebarItem';
+
+import { setTaskViewType } from '@store/slices/task/taskSlice';
+import { MainState, useAppDispatch } from '@store/index';
 
 import { ModuleItem } from '@interfaces/app';
 
 import { MODULES_LIST } from '@mocks/modules';
 
 const ModulesList = () => {
-  // Show Dashboard by default
-  const defaultModuleToShow = MODULES_LIST[0].id;
+  const dispatch = useAppDispatch();
 
-  const [moduleSelectedId, setModuleSelectedId] =
-    useState<string>(defaultModuleToShow);
+  const { viewType } = useSelector((state: MainState) => state.task);
 
   return (
     <div className="my-8 flex w-full flex-1 flex-col">
       {MODULES_LIST.map(({ name, id, icon }: ModuleItem) => {
-        const isItemSelected = moduleSelectedId === id;
+        const isItemSelected = viewType === id;
+
         return (
           <SidebarItem
             key={id}
@@ -27,7 +31,7 @@ const ModulesList = () => {
                 ? 'text-primary-4 hover:text-neutral-1'
                 : 'text-neutral-2',
             })}
-            onSelect={() => setModuleSelectedId(id)}
+            onSelect={() => dispatch(setTaskViewType(id))}
           />
         );
       })}
