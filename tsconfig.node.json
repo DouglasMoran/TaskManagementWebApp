@@ -12,13 +12,13 @@
     "moduleDetection": "force",
     "noEmit": true,
 
+    "typeRoots": ["./src/@types", "./src/interfaces"],
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    "typeRoots": ["./src/@types"]
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["vite.config.ts"]
+  "include": ["src/**/*", "src/interfaces/components.types.d.ts"]
 }

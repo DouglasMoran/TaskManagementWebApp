@@ -32,7 +32,7 @@
       "@utils/*": ["utils/*"]
     },
 
-    "typeRoots": ["./src/@types"],
+    "typeRoots": ["./src/@types", "./src/interfaces"],
 
     /* Linting */
     "strict": true,
@@ -40,5 +40,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src/**/*", "src/interfaces/components.types.d.ts"]
 }
