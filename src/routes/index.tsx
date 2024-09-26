@@ -17,7 +17,7 @@ const ErrorBoundaryFallback = lazy(
   () => import('@components/templates/ErrorBoundaryFallback'),
 );
 
-const DashboardPage = lazy(() => import('@pages/dashboard'));
+const DashboardPage = lazy(() => import('@pages/Dashboard'));
 
 const AppRouter = () => {
   const { ONBOARDING, DASHBOARD, TASKS } = ROUTE_PATH;
