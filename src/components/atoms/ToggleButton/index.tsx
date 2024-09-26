@@ -16,7 +16,7 @@ const ToggleButton = ({ value, onSelect }: ToggleButtonPropsType) => {
     <div className="flex flex-row">
       <IconButton
         type="outline"
-        contentStyles={`${value === unselected && 'border'} border-primary-4`}
+        contentStyles={`${value === unselected && 'border'} border-primary-4 hover:border-neutral-1`}
         icon={
           <HamburgerMenuIcon
             svgClassName={
