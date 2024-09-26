@@ -29,7 +29,6 @@
 /* Add more weights and styles as needed */
 
 body {
-  /* @apply px-4; */
   @apply bg-neutral-5;
 }
 
