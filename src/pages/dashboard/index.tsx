@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 
 import ActionButtons from '@components/molecules/ActionButtons';
+import TaskList from '@components/templates/TaskList/iindex';
 import MainContainer from '@components/atoms/MainContainer';
 import TaskBoard from '@components/templates/TaskBoard';
 import Sidebar from '@components/templates/Sidebar';
@@ -23,6 +24,7 @@ const Dashboard = () => {
           <ActionButtons />
           {/* Board */}
           {viewType === TASK_VIEW.BOARD && <TaskBoard />}
+          {viewType === TASK_VIEW.LIST && <TaskList />}
         </div>
       </div>
     </MainContainer>

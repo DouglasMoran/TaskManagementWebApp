@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
@@ -10,6 +11,7 @@ export default {
           3: 'var(--color-neutral-3)',
           4: 'var(--color-neutral-4)',
           5: 'var(--color-neutral-5)',
+          6: 'var(--color-neutral-6)',
         },
         primary: {
           1: 'var(--color-primary-1)',
@@ -17,37 +19,74 @@ export default {
           3: 'var(--color-primary-3)',
           4: 'var(--color-primary-4)',
           5: 'var(--color-primary-5)',
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
           1: 'var(--color-secondary-1)',
           2: 'var(--color-secondary-2)',
           3: 'var(--color-secondary-3)',
           4: 'var(--color-secondary-4)',
+          5: 'var(--color-secondary-5)',
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
         },
         tertiary: {
           1: 'var(--color-tertiary-1)',
           2: 'var(--color-tertiary-2)',
           3: 'var(--color-tertiary-3)',
           4: 'var(--color-tertiary-4)',
+          5: 'var(--color-tertiary-5)',
+        },
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        chart: {
+          1: 'hsl(var(--chart-1))',
+          2: 'hsl(var(--chart-2))',
+          3: 'hsl(var(--chart-3))',
+          4: 'hsl(var(--chart-4))',
+          5: 'hsl(var(--chart-5))',
         },
       },
       fontSize: {
-        xxsmall: '0.25rem', // 4px
-        xsmall: '0.5rem', // 8px
-        small: '0.75rem', // 12px
-        medium: '1rem', // 16px
-        large: '1.5rem', // 24px
-        xlarge: '2rem', // 32px
-        xxlarge: '3rem', // 48px
-        xxxlarge: '4rem', // 64px
-        big: '4.5rem', // 72px
+        xxsmall: '0.25rem',
+        xsmall: '0.5rem',
+        small: '0.75rem',
+        medium: '1rem',
+        large: '1.5rem',
+        xlarge: '2rem',
+        xxlarge: '3rem',
+        xxxlarge: '4rem',
+        big: '4.5rem',
       },
       fontFamily: {
-        sans: ['"Open Sans"', 'sans-serif'],
-        sf: ['"SF Pro Display"', 'sans-serif'],
+        sans: ['Open Sans"', 'sans-serif'],
+        sf: ['SF Pro Display"', 'sans-serif'],
       },
       screens: {
-        // Breakpoints
         mobilexs: '360px',
         mobile: '375px',
         sm: '640px',
@@ -55,7 +94,12 @@ export default {
         lg: '1024px',
         xl: '1280px',
       },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
 };

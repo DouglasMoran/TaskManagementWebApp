@@ -7,6 +7,7 @@ const initialState = {
   errorMessage: '',
   data: null,
   viewType: 'BOARD',
+  searchQuery: '',
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
@@ -19,10 +20,14 @@ const appSlice = createSlice({
     setTaskViewType: (state, { payload }) => {
       state.viewType = payload;
     },
+    setSearchQuery: (state, { payload }) => {
+      state.searchQuery = payload;
+    },
   },
   extraReducers: () => {},
 });
 
-export const { setTaskErrorMessage, setTaskViewType } = appSlice.actions;
+export const { setTaskErrorMessage, setTaskViewType, setSearchQuery } =
+  appSlice.actions;
 
 export default appSlice.reducer;

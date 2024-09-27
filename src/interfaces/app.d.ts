@@ -11,4 +11,5 @@ export interface TaskState {
   data?: any | null;
   errorMessage: string;
   viewType: TaskViewType;
+  searchQuery: string;
 }

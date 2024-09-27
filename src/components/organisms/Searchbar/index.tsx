@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
+
+import { useSelector } from 'react-redux';
 
 import { ImCancelCircle } from 'react-icons/im';
 import { BiSearch } from 'react-icons/bi';
 
 import IconButton from '@components/atoms/IconButton';
 
+import { setSearchQuery } from '@store/slices/task/taskSlice';
+import { MainState, useAppDispatch } from '@store/index';
+
 const Searchbar = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const dispatch = useAppDispatch();
+
+  const { searchQuery } = useSelector((state: MainState) => state.task);
 
   const isInputDirty = !!searchQuery;
 
   const handleInputChnage = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchQuery(event.target.value);
+    dispatch(setSearchQuery(event.target.value));
 
-  const clearInputValue = () => setSearchQuery('');
-
+  const clearInputValue = () => dispatch(setSearchQuery(''));
+  console.log(searchQuery);
   return (
     <div className="me-2 flex w-full flex-row items-center gap-4">
       <BiSearch className="h-6 w-6 text-neutral-2" />
