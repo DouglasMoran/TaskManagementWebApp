@@ -13,3 +13,22 @@ export interface TaskState {
   viewType: TaskViewType;
   searchQuery: string;
 }
+
+export interface ITaskEstimate {
+  id: string;
+  value: string;
+  label: string;
+  icon: JSX.Element;
+}
+
+export interface ITaskAssignee {
+  id: string | number;
+  name: string;
+  profileUrl: string;
+}
+
+export interface ITaskLabel {
+  id: string;
+  value: string;
+  label: string;
+}

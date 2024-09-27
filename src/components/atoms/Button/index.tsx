@@ -5,10 +5,9 @@ import {
   ButtonProps as ShadcnButtonProps,
 } from '@components/ui/button';
 
-type ButtonProps = {
+type ButtonProps = ShadcnButtonProps & {
   children: React.ReactNode;
   className: string;
-  config: ShadcnButtonProps;
 };
 
 const Button = ({ children, className, ...buttonConfig }: ButtonProps) => {

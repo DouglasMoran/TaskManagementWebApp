@@ -32,6 +32,10 @@ body {
   @apply bg-neutral-5;
 }
 
+.custom-caret {
+  caret-color: theme('colors.white');
+}
+
 :root {
   font-family: sans-serif;
   /* line-height: 1.5;

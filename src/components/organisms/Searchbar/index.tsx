@@ -21,7 +21,7 @@ const Searchbar = () => {
     dispatch(setSearchQuery(event.target.value));
 
   const clearInputValue = () => dispatch(setSearchQuery(''));
-  console.log(searchQuery);
+
   return (
     <div className="me-2 flex w-full flex-row items-center gap-4">
       <BiSearch className="h-6 w-6 text-neutral-2" />
@@ -29,7 +29,7 @@ const Searchbar = () => {
         type="text"
         value={searchQuery}
         onChange={handleInputChnage}
-        className="focus:bg-transparen h-[40px] w-full rounded-md bg-transparent px-4  focus:outline-none focus:ring-2 focus:ring-neutral-2"
+        className="focus:bg-transparen h-[40px] w-full rounded-md bg-transparent px-4 text-neutral-1  focus:outline-none focus:ring-2 focus:ring-neutral-2"
       />
 
       {isInputDirty && (
