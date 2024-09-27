@@ -1,27 +1,32 @@
 'use client';
 
-import * as React from 'react';
-
-import { Calendar } from '@components/ui/calendar';
+import { Calendar as ShadcnCalendar } from '@components/ui/calendar';
 
 import { formatDate } from '@utils/date-format';
 
-export function CalendarDemo() {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+type CalendarProps = {
+  date: Date;
+  onSelect: (date: Date) => void;
+};
+
+const Calendar = ({ date, onSelect }: CalendarProps) => {
+  const dateFormatter = formatDate(date);
 
   return (
-    <Calendar
+    <ShadcnCalendar
       mode="single"
       selected={date}
-      onSelect={setDate}
+      onSelect={(date) => onSelect(date ?? new Date())}
       className="rounded-md bg-neutral-5 text-neutral-1"
       footer={
-        <div className="flex justify-center items-center pt-2 border-t-[1px] border-neutral-2">
-          <p className="text-sm text-primary-4 font-normal font-sf">
-            {formatDate(date)}
+        <div className="flex items-center justify-center border-t-[1px] border-neutral-2 pt-2">
+          <p className="font-sf text-sm font-normal text-primary-4">
+            {dateFormatter}
           </p>
         </div>
       }
     />
   );
-}
+};
+
+export default Calendar;

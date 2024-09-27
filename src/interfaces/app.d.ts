@@ -6,12 +6,22 @@ export interface ModuleItem {
   icon: JSX.Element;
 }
 
+export interface ITask {
+  id: string | number;
+  title: string;
+  points: Pick<ITaskEstimate, 'id' | 'value'>;
+  member: ITaskAssignee;
+  labels: ITaskLabel[];
+  date: Date;
+}
+
 export interface TaskState {
   loading: LoadingType;
   data?: any | null;
   errorMessage: string;
   viewType: TaskViewType;
   searchQuery: string;
+  task: ITask | null;
 }
 
 export interface ITaskEstimate {
@@ -22,7 +32,7 @@ export interface ITaskEstimate {
 }
 
 export interface ITaskAssignee {
-  id: string | number;
+  id: string;
   name: string;
   profileUrl: string;
 }

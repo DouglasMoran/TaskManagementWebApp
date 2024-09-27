@@ -40,6 +40,7 @@ const config = [
       'react/prop-types': 'off',
       '@typescript-eslint/no-unused-vars': 1,
       'tailwindcss/classnames-order': 'warn',
+      'no-unused-vars': 'off',
     },
   },
   {

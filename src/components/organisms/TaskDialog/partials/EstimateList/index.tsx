@@ -1,32 +1,35 @@
-import { useState } from 'react';
+import { useCallback } from 'react';
 
-import { ITaskEstimate } from '@interfaces/app';
+import { ITask, ITaskEstimate } from '@interfaces/app';
 
 import { ESTIMATES_LIST } from '@mocks/task';
 
-const EstimateList = () => {
-  const [estimatePointsSelected, setEstimatePointsSelected] =
-    useState<string>('');
+type EstimateListProps = {
+  data?: ITaskEstimate[];
+  onSelect: (task: Partial<ITask>) => void;
+};
 
-  const handleSelectMember = (memberId: string) => {
-    setEstimatePointsSelected((prevId: string) => {
-      if (prevId === memberId) {
-        return '';
+const EstimateList = ({
+  data = ESTIMATES_LIST,
+  onSelect,
+}: EstimateListProps) => {
+  const handleSelectMember = useCallback(
+    (member: Pick<ITaskEstimate, 'id' | 'value' | 'label'>) => {
+      if (member) {
+        onSelect({ points: member });
       }
-
-      return memberId;
-    });
-  };
-
-  console.log('estimatePointsSelected ::: ', estimatePointsSelected);
+    },
+    [onSelect],
+  );
 
   return (
     <div className="mt-2 flex flex-col gap-2">
-      {ESTIMATES_LIST.map(({ id, label, icon }: ITaskEstimate) => {
+      {data.map((item: ITaskEstimate) => {
+        const { id, label, icon, value } = item ?? {};
         return (
           <div
             key={id}
-            onClick={() => handleSelectMember(id)}
+            onClick={() => handleSelectMember({ id, label, value })}
             className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2"
           >
             {icon}
