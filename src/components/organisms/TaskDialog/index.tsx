@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { Dialog, DialogPanel } from '@headlessui/react';
 
@@ -7,13 +7,14 @@ import { RiPriceTag3Fill } from 'react-icons/ri';
 import { FaCarBattery } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 
-import { CalendarDemo } from '@components/atoms/Calendar';
+import Calendar from '@components/atoms/Calendar';
 import Popover from '@components/molecules/Popover';
 import Button from '@components/atoms/Button';
 
 import EstimateList from './partials/EstimateList';
 import AssigneeList from './partials/AssigneeList';
 import LabelList from './partials/LabelList';
+import useTask from '@hooks/useTask';
 
 type TaskDialogProps = {
   isOpen: boolean;
@@ -21,10 +22,12 @@ type TaskDialogProps = {
 };
 
 const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
-  const [taskTitle, setTaskTitle] = useState<string>('');
+  const { task, onStoreTask } = useTask();
+
+  const hasDatePrevSelect = !!task?.date;
 
   const handleTaskTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setTaskTitle(event.target.value);
+    onStoreTask({ title: event.target.value });
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -32,7 +35,7 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
         <DialogPanel className="w-5/12 space-y-4 rounded-lg bg-neutral-3 p-6">
           <input
             placeholder="Task title"
-            value={taskTitle}
+            value={task?.title ?? ''}
             onChange={handleTaskTitle}
             className="flex w-full flex-1 bg-transparent px-4 py-3 text-2xl text-neutral-1 placeholder:text-neutral-2 focus:outline-none focus:ring-transparent"
           />
@@ -42,14 +45,14 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
               contentTitle="Estimate"
               buttonIcon={<FaCarBattery className="h-6 w-6 text-neutral-1" />}
             >
-              <EstimateList />
+              <EstimateList onSelect={onStoreTask} />
             </Popover>
             <Popover
               buttonTitle="Assignee"
               contentTitle="Assignee"
               buttonIcon={<FaUser className="h-6 w-6 text-neutral-1" />}
             >
-              <AssigneeList />
+              <AssigneeList onSelect={onStoreTask} />
             </Popover>
             <Popover
               buttonTitle="Label"
@@ -58,7 +61,7 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
                 <RiPriceTag3Fill className="h-6 w-6 text-neutral-1" />
               }
             >
-              <LabelList />
+              <LabelList onSelect={onStoreTask} />
             </Popover>
             <Popover
               buttonTitle="Due date"
@@ -67,7 +70,10 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
               }
               classContent="!max-h-96 !p-0"
             >
-              <CalendarDemo />
+              <Calendar
+                date={hasDatePrevSelect ? task?.date : new Date()}
+                onSelect={(date) => onStoreTask({ date })}
+              />
             </Popover>
           </div>
           {/* Actions */}

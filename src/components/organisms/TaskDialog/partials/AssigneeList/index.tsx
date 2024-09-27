@@ -1,30 +1,35 @@
 import Avatar from '@components/atoms/Avatar';
-import { ITaskAssignee } from '@interfaces/app';
+import { ITask, ITaskAssignee } from '@interfaces/app';
 
 import { ASSIGNEE_LIST } from '@mocks/task';
-import { useState } from 'react';
+import { useCallback } from 'react';
 
-const AssigneeList = () => {
-  const [memberSelected, setMemberSelected] = useState<string | number>('');
+type EstimateListProps = {
+  data?: ITaskAssignee[];
+  onSelect: (task: Partial<ITask>) => void;
+};
 
-  const handleSelectMember = (memberId: string | number) => {
-    setMemberSelected((prevId: string | number) => {
-      if (prevId === memberId) {
-        return '';
+const AssigneeList = ({
+  data = ASSIGNEE_LIST,
+  onSelect,
+}: EstimateListProps) => {
+  const handleSelectMember = useCallback(
+    (member: ITaskAssignee) => {
+      if (member) {
+        onSelect({ member });
       }
+    },
+    [onSelect],
+  );
 
-      return memberId;
-    });
-  };
-
-  console.log('memberSelected ::: ', memberSelected);
   return (
     <div className="mt-2 flex flex-col gap-2">
-      {ASSIGNEE_LIST.map(({ id, name, profileUrl }: ITaskAssignee) => {
+      {data.map((item: ITaskAssignee) => {
+        const { id, name, profileUrl } = item ?? {};
         return (
           <div
             key={id}
-            onClick={() => handleSelectMember(id)}
+            onClick={() => handleSelectMember(item)}
             className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2"
           >
             <Avatar url={profileUrl} />

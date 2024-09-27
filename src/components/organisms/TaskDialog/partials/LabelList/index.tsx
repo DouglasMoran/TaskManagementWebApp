@@ -1,39 +1,39 @@
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Checkbox } from '@headlessui/react';
 
 import { BsCheck } from 'react-icons/bs';
 
-import { ITaskLabel } from '@interfaces/app';
+import { ITask, ITaskLabel } from '@interfaces/app';
+
+import { MainState } from '@store/index';
 
 import { LABEL_LIST } from '@mocks/task';
 
-const LabelList = () => {
-  const [labelsSelected, setLabelsSelected] = useState<string[]>([]);
+type LabelListtProps = {
+  data?: ITaskLabel[];
+  onSelect: (task: Partial<ITask>) => void;
+};
 
-  const handleSelectLabel = (labelId: string) => {
-    const labelSelectedId = labelsSelected.find((itemId) => itemId === labelId);
+const LabelList = ({ data = LABEL_LIST, onSelect }: LabelListtProps) => {
+  const { task } = useSelector((state: MainState) => state.task);
 
-    if (labelSelectedId) {
-      // Remove prev label selected
-      setLabelsSelected((prevLabels) =>
-        prevLabels.filter((id) => id !== labelId),
-      );
-      return;
-    }
+  const prevLabelsSelectedId = Array.isArray(task?.labels)
+    ? task?.labels.map((item) => item.id)
+    : [];
 
-    // Add label selected
-    setLabelsSelected((prevLabels) => prevLabels.concat(labelId));
-  };
+  // Label Item is wrapped like array because the logic is controlle on the store
+  const handleSelectLabel = (labelItem: ITaskLabel) =>
+    onSelect({ labels: [labelItem] });
 
   return (
     <div className="mt-2 flex flex-col gap-2">
-      {LABEL_LIST.map(({ id, value, label }: ITaskLabel) => {
-        const prevLabelSelectedId = labelsSelected.find(
-          (itemId) => itemId === id,
-        );
+      {data.map((item: ITaskLabel) => {
+        const { id, value, label } = item ?? {};
 
-        const isLabelChecked = prevLabelSelectedId === id;
+        const isLabelChecked =
+          prevLabelsSelectedId.length > 0 && prevLabelsSelectedId.includes(id);
+
         return (
           <div
             key={id}
@@ -41,7 +41,7 @@ const LabelList = () => {
           >
             <Checkbox
               checked={isLabelChecked}
-              onChange={() => handleSelectLabel(id)}
+              onChange={() => handleSelectLabel(item)}
               value={value}
               className="group size-6 rounded-sm bg-white/10 p-1 ring-1 ring-inset ring-white/15 hover:border hover:border-neutral-1 data-[checked]:bg-white"
             >
