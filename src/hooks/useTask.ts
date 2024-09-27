@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -17,12 +17,17 @@ const useTask = () => {
     dispatch(setTask(task));
   };
 
+  const onChangeTaskTitle = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ title: value });
+
   useEffect(() => {
     console.log('CURRENT TASK ::: ', task);
   }, [task]);
 
   return {
     task,
+    onChangeTaskTitle,
     onStoreTask,
   };
 };

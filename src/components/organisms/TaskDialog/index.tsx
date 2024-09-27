@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Dialog, DialogPanel } from '@headlessui/react';
 
 import { RiCalendarCheckLine } from 'react-icons/ri';
@@ -22,12 +20,7 @@ type TaskDialogProps = {
 };
 
 const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
-  const { task, onStoreTask } = useTask();
-
-  const hasDatePrevSelect = !!task?.date;
-
-  const handleTaskTitle = (event: React.ChangeEvent<HTMLInputElement>) =>
-    onStoreTask({ title: event.target.value });
+  const { task, onStoreTask, onChangeTaskTitle } = useTask();
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
@@ -36,7 +29,7 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
           <input
             placeholder="Task title"
             value={task?.title ?? ''}
-            onChange={handleTaskTitle}
+            onChange={onChangeTaskTitle}
             className="flex w-full flex-1 bg-transparent px-4 py-3 text-2xl text-neutral-1 placeholder:text-neutral-2 focus:outline-none focus:ring-transparent"
           />
           <div className="flex flex-wrap items-center justify-around gap-y-4 py-4">
@@ -71,7 +64,7 @@ const TaskDialog = ({ isOpen, onClose }: TaskDialogProps) => {
               classContent="!max-h-96 !p-0"
             >
               <Calendar
-                date={hasDatePrevSelect ? task?.date : new Date()}
+                date={task?.date ? task?.date : new Date()}
                 onSelect={(date) => onStoreTask({ date })}
               />
             </Popover>

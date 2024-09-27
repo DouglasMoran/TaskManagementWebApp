@@ -27,9 +27,9 @@ const ModulesList = () => {
             name={name}
             selected={isItemSelected}
             icon={React.cloneElement(icon as React.ReactElement, {
-              svgClassName: isItemSelected
-                ? 'text-primary-4 hover:text-neutral-1'
-                : 'text-neutral-2',
+              className: isItemSelected
+                ? 'text-primary-4 hover:text-neutral-1 h-6 w-6'
+                : 'text-neutral-2 h-6 w-6',
             })}
             onSelect={() => dispatch(setTaskViewType(id))}
           />
