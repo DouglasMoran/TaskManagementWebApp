@@ -23,7 +23,12 @@ const ActionButtons = () => {
       >
         <LiaPlusSolid className="h-8 w-8 text-neutral-1" />
       </Button>
-      <TaskDialog isOpen={isDialogOpen} onClose={handleToggleDialog} />
+      <TaskDialog isOpen={isDialogOpen} onClose={handleToggleDialog}>
+        <TaskDialog.EstimateButton />
+        <TaskDialog.AssigneeButton />
+        <TaskDialog.LabelButton />
+        <TaskDialog.CalendarButton />
+      </TaskDialog>
     </div>
   );
 };

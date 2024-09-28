@@ -26,8 +26,8 @@ const ToggleButton = () => {
           <AiOutlineMenu
             className={
               !isBoardView
-                ? 'text-primary-4 hover:text-neutral-1'
-                : 'text-neutral-1'
+                ? 'h-6 w-6 text-primary-4 hover:text-neutral-1'
+                : 'h-6 w-6 text-neutral-1'
             }
           />
         }
@@ -39,9 +39,9 @@ const ToggleButton = () => {
         icon={
           <MdGridView
             className={
-              !isBoardView
-                ? 'text-primary-4 hover:text-neutral-1'
-                : 'text-neutral-1'
+              isBoardView
+                ? 'h-6 w-6 text-primary-4 hover:text-neutral-1'
+                : 'h-6 w-6 text-neutral-1'
             }
           />
         }

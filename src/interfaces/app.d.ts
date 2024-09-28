@@ -9,7 +9,7 @@ export interface ModuleItem {
 export interface ITask {
   id: string | number;
   title: string;
-  points: Pick<ITaskEstimate, 'id' | 'value'>;
+  points: Pick<ITaskEstimate, 'id' | 'value' | 'label'>;
   member: ITaskAssignee;
   labels: ITaskLabel[];
   date: Date;

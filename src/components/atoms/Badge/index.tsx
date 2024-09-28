@@ -1,11 +1,9 @@
-import { PropsWithChildren } from 'react';
-
-type BadgeProps = PropsWithChildren<{
+type BadgeProps = {
   icon?: JSX.Element;
   title: string;
   containerClass?: string;
   textClass?: string;
-}>;
+};
 
 const Badge = ({
   icon,
