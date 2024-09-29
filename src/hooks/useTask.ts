@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useSelector } from 'react-redux';
 
@@ -6,13 +6,17 @@ import { MainState, useAppDispatch } from '@store/index';
 
 import { setTask } from '@store/slices/task/taskSlice';
 
-import { ITask } from '@interfaces/app';
+import { ITask, ITaskStatusSections } from '@interfaces/app';
 import { validationTaskSchema } from '@utils/validations';
+import { STATUS_SECTIONS_LIST } from '@mocks/task';
 
 const useTask = () => {
   const dispatch = useAppDispatch();
 
   const { task } = useSelector((state: MainState) => state.task);
+
+  const [statusSections, setStatusSections] =
+    useState<ITaskStatusSections[]>(STATUS_SECTIONS_LIST);
 
   const isTaskValid = validationTaskSchema.isValidSync(task);
 
@@ -35,6 +39,7 @@ const useTask = () => {
   return {
     task,
     isTaskValid,
+    statusSections,
     onChangeTaskTitle,
     onSubmitTask,
     onStoreTask,

@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { TaskState } from '@interfaces/app';
 
+import { STATUS_SECTIONS_LIST } from '@mocks/task';
+
 const initialState = {
   loading: 'idle',
   errorMessage: '',
@@ -9,6 +11,7 @@ const initialState = {
   viewType: 'BOARD',
   searchQuery: '',
   task: null,
+  taskStatusSections: STATUS_SECTIONS_LIST,
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
@@ -72,6 +75,7 @@ const appSlice = createSlice({
 
       state.task = { ...task, ...payloadUpdated };
     },
+    // setTaskSections: (state, { payload }) => {},
   },
   extraReducers: () => {},
 });

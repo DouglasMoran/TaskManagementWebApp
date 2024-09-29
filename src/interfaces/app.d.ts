@@ -22,6 +22,7 @@ export interface TaskState {
   viewType: TaskViewType;
   searchQuery: string;
   task: ITask | null;
+  taskStatusSections: ITaskStatusSections[] | null;
 }
 
 export interface ITaskEstimate {
@@ -41,4 +42,10 @@ export interface ITaskLabel {
   id: string;
   value: string;
   label: string;
+}
+
+export interface ITaskStatusSections {
+  id: string;
+  title: string;
+  tasks: ITask[] | null;
 }

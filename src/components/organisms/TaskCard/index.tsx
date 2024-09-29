@@ -10,18 +10,22 @@ import Avatar from '@components/atoms/Avatar';
 
 type TaskCardProps = {
   children: React.ReactNode;
+  draggableProps?: React.HTMLAttributes<HTMLDivElement>; // Props for draggable
+  dragHandleProps?: React.HTMLAttributes<HTMLDivElement>; // Props for drag handle
 };
 
+// Use forwardRef to pass ref to the root div element
 const TaskCard = ({ children }: TaskCardProps) => {
   return (
-    <div className="h-52 w-4/12 overflow-hidden rounded-lg bg-neutral-4 py-4 pe-3 ps-4">
+    <div className="w-full overflow-hidden rounded-lg bg-neutral-4 py-4 pe-3 ps-4">
       {children}
     </div>
   );
 };
 
+// Defining the static sub-components (Header, Content, Footer) as properties of TaskCard
 TaskCard.Header = () => (
-  <div className="flex w-full flex-row items-center justify-between ">
+  <div className="flex w-full flex-row items-center justify-between">
     <p className="text-neutral-1">Slack</p>
     <Button variant="ghost" className="p-2 hover:bg-neutral-6">
       <BsThreeDots className="h-8 w-8 text-neutral-2" />
