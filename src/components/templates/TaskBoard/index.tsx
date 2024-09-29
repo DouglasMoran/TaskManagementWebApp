@@ -21,7 +21,7 @@ const TaskBoard = () => {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex h-full gap-4">
+      <div className="flex h-full space-x-4 overflow-x-auto">
         {columns?.map((section) => (
           <DroppableContainer
             key={section.id}

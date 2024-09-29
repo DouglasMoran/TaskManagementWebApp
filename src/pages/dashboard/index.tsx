@@ -18,7 +18,7 @@ const Dashboard = () => {
     <MainContainer>
       <div className="flex h-full w-full flex-row">
         <Sidebar />
-        <div className="mb-4 flex w-full flex-1 flex-col gap-6 ps-8">
+        <div className="mb-4 flex w-full flex-1 flex-col gap-6 ps-8 md:w-8/12">
           <Navbar />{' '}
           {/* Action buttons: Handles of make the key action like create a new task or toggle the board view like grid columns or simple list */}
           <ActionButtons />

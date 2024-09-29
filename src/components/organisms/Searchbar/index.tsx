@@ -23,8 +23,8 @@ const Searchbar = () => {
   const clearInputValue = () => dispatch(setSearchQuery(''));
 
   return (
-    <div className="me-2 flex h-16 w-full flex-row items-center gap-4">
-      <BiSearch className="h-6 w-6 text-neutral-2" />
+    <div className="me-2 flex h-16 w-full flex-row items-center gap-4 md:w-3/12">
+      <BiSearch className="h-6 w-6 text-neutral-2 md:h-14 md:w-14" />
       <input
         type="text"
         value={searchQuery}

@@ -12,7 +12,7 @@ const SidebarItem = ({ icon, name, selected, onSelect }: SidebarItemProps) => {
       onClick={onSelect}
     >
       {icon}
-      <p>{name}</p>
+      <p className="md:text-sm">{name}</p>
     </div>
   );
 };

@@ -15,7 +15,10 @@ export const DroppableContainer = ({
   const { setNodeRef } = useDroppable({ id });
 
   return (
-    <div ref={setNodeRef} className="flex h-full w-4/12 flex-col gap-4 ">
+    <div
+      ref={setNodeRef}
+      className="flex h-full w-4/12 flex-shrink-0 flex-col gap-4 md:min-w-80 "
+    >
       <div>
         <p className="font-sf text-xl font-semibold text-neutral-1">{title}</p>
       </div>

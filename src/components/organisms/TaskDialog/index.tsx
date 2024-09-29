@@ -28,10 +28,11 @@ const TaskDialog = ({ isOpen, onClose, children }: TaskDialogProps) => {
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 flex w-screen items-center justify-center bg-neutral-6 p-4">
-        <DialogPanel className="w-5/12 space-y-4 rounded-lg bg-neutral-3 p-6">
+        <DialogPanel className="w-5/12 space-y-4 rounded-lg bg-neutral-3 p-6 md:w-10/12 lg:w-7/12 xl:w-6/12 2xl:w-5/12">
           <input
             placeholder="Task title"
             value={task?.title ?? ''}
+            maxLength={40}
             onChange={onChangeTaskTitle}
             className="flex w-full flex-1 bg-transparent px-4 py-3 text-2xl text-neutral-1 placeholder:text-neutral-2 focus:outline-none focus:ring-transparent"
           />
