@@ -8,8 +8,12 @@ import { MainState, useAppDispatch } from '@store/index';
 import {
   addTaskToSection,
   onClearTask,
+  onDeleteTask,
+  onUpdateTask,
   onToggleTaskModal,
   setTask,
+  onToggleTaskUpdate,
+  setTaskSectionIdSelected,
 } from '@store/slices/task/taskSlice';
 
 import { ITask } from '@interfaces/app';
@@ -17,16 +21,34 @@ import { validationTaskSchema } from '@utils/validations';
 
 import { STATUS_COLUMN_ID } from '@constants/app';
 
+type TaskActionProps = {
+  sectionId: string;
+  taskId: string;
+  taskUpdated?: ITask;
+};
+
 const useTask = () => {
   const dispatch = useAppDispatch();
 
-  const { task, isTaskModalOpen } = useSelector(
-    (state: MainState) => state.task,
-  );
+  const { task, isTaskModalOpen, isTaskUpdate, taskSectionIdSelected } =
+    useSelector((state: MainState) => state.task);
 
   const isTaskValid = validationTaskSchema.isValidSync(task);
 
-  const onCloseTaskModal = () => dispatch(onToggleTaskModal());
+  const onToggleModal = () => dispatch(onToggleTaskModal());
+
+  const onToggleEditMode = () => dispatch(onToggleTaskUpdate());
+
+  const onUpdate = ({ sectionId, taskId, taskUpdated }: TaskActionProps) => {
+    dispatch(onUpdateTask({ sectionId, taskId, taskUpdated }));
+    onToggleEditMode();
+    onToggleModal();
+    dispatch(setTaskSectionIdSelected(sectionId));
+  };
+
+  const onDelete = ({ sectionId, taskId }: TaskActionProps) => {
+    dispatch(onDeleteTask({ sectionId, taskId }));
+  };
 
   const onStoreTask = (task: Partial<ITask>) => {
     dispatch(setTask(task));
@@ -36,30 +58,47 @@ const useTask = () => {
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ title: value });
 
-  const onSubmitTask = async () => {
+  const resetStatus = () => {
+    dispatch(onClearTask());
+    onToggleModal();
+  };
+
+  const handleSubmitTask = async () => {
     if (task) {
-      dispatch(
-        addTaskToSection({
-          sectionId: STATUS_COLUMN_ID.WORKING,
-          task: {
-            ...task,
-            id: uuidv4(),
-          },
-        }),
-      );
-      dispatch(onClearTask());
-      onCloseTaskModal();
+      if (isTaskUpdate) {
+        onUpdate({
+          sectionId: taskSectionIdSelected,
+          taskId: task.id,
+          taskUpdated: task,
+        });
+        dispatch(setTaskSectionIdSelected(null));
+      } else {
+        dispatch(
+          addTaskToSection({
+            sectionId: STATUS_COLUMN_ID.WORKING,
+            task: {
+              ...task,
+              id: uuidv4(),
+            },
+          }),
+        );
+      }
+
+      resetStatus();
     }
   };
 
   return {
     isTaskModalOpen,
+    isTaskUpdate,
     isTaskValid,
     task,
-    onCloseTaskModal,
+    onToggleModal,
     onChangeTaskTitle,
-    onSubmitTask,
+    handleSubmitTask,
     onStoreTask,
+    onUpdate,
+    onDelete,
   };
 };
 

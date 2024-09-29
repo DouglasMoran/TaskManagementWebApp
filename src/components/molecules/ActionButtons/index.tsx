@@ -6,7 +6,7 @@ import Button from '@components/atoms/Button';
 import useTask from '@hooks/useTask';
 
 const ActionButtons = () => {
-  const { isTaskModalOpen, onCloseTaskModal } = useTask();
+  const { isTaskModalOpen, onToggleModal } = useTask();
 
   return (
     <div className="flex w-full flex-row justify-between">
@@ -16,11 +16,11 @@ const ActionButtons = () => {
       <Button
         variant="default"
         className="h-10 w-10 rounded-md bg-primary-4 p-2 hover:bg-primary-3"
-        onClick={onCloseTaskModal}
+        onClick={onToggleModal}
       >
         <LiaPlusSolid className="h-8 w-8 text-neutral-1" />
       </Button>
-      <TaskDialog isOpen={isTaskModalOpen} onClose={onCloseTaskModal}>
+      <TaskDialog isOpen={isTaskModalOpen} onClose={onToggleModal}>
         <TaskDialog.EstimateButton />
         <TaskDialog.AssigneeButton />
         <TaskDialog.LabelButton />

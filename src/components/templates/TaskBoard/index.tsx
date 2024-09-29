@@ -37,7 +37,11 @@ const TaskBoard = () => {
                 ({ id, title, member, ...restTaskData }, index) => (
                   <SortableItem key={id} id={id} index={index}>
                     <TaskCard>
-                      <TaskCard.Header title={title} />
+                      <TaskCard.Header
+                        title={title}
+                        sectionId={section.id}
+                        taskId={id}
+                      />
                       <TaskCard.Content {...restTaskData} />
                       <TaskCard.Footer member={member} />
                     </TaskCard>

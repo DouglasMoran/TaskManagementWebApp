@@ -135,7 +135,7 @@ const CalendarButton = () => {
 };
 
 const Footer = ({ onClose }: Pick<TaskDialogProps, 'onClose'>) => {
-  const { isTaskValid, onSubmitTask } = useTask();
+  const { isTaskValid, isTaskUpdate, handleSubmitTask } = useTask();
 
   return (
     <div className="flex flex-1 items-center justify-end gap-4">
@@ -149,9 +149,9 @@ const Footer = ({ onClose }: Pick<TaskDialogProps, 'onClose'>) => {
       <Button
         disabled={!isTaskValid}
         className="bg-primary-4 hover:bg-primary-3 disabled:bg-primary-2"
-        onClick={onSubmitTask}
+        onClick={handleSubmitTask}
       >
-        Create
+        {isTaskUpdate ? 'Update' : 'Create'}
       </Button>
     </div>
   );

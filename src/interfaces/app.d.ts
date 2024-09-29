@@ -7,7 +7,7 @@ export interface ModuleItem {
 }
 
 export interface ITask {
-  id: string | number;
+  id: string;
   title: string;
   points: Pick<ITaskEstimate, 'id' | 'value' | 'label'>;
   member: ITaskAssignee;
@@ -24,6 +24,9 @@ export interface TaskState {
   task: ITask | null;
   taskStatusSections: ITaskStatusSections[] | null;
   isTaskModalOpen: boolean;
+  isTaskUpdate: boolean;
+  // Tmp use for updating task
+  taskSectionIdSelected: string;
 }
 
 export interface ITaskEstimate {

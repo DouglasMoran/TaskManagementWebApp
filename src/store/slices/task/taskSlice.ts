@@ -13,12 +13,18 @@ const initialState = {
   task: null,
   taskStatusSections: STATUS_SECTIONS_LIST, // Dummy data tmp
   isTaskModalOpen: false,
+  isTaskUpdate: false,
+  // Section selected is use tmp to achieve task updating
+  taskSectionIdSelected: '',
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
+    setTaskSectionIdSelected: (state, { payload }) => {
+      state.taskSectionIdSelected = payload;
+    },
     setTaskErrorMessage: (state, { payload }) => {
       state.errorMessage = payload;
     },
@@ -79,6 +85,15 @@ const appSlice = createSlice({
     setTaskSections: (state, { payload }) => {
       state.taskStatusSections = payload;
     },
+    onToggleTaskModal: (state) => {
+      state.isTaskModalOpen = !state.isTaskModalOpen;
+    },
+    onToggleTaskUpdate: (state) => {
+      state.isTaskUpdate = !state.isTaskUpdate;
+    },
+    onClearTask: (state) => {
+      state.task = null;
+    },
     addTaskToSection: (
       state,
       { payload }: PayloadAction<{ sectionId: string; task: ITask }>,
@@ -92,11 +107,65 @@ const appSlice = createSlice({
         }
       }
     },
-    onToggleTaskModal: (state) => {
-      state.isTaskModalOpen = !state.isTaskModalOpen;
+    onUpdateTask: (
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        sectionId: string;
+        taskId: string;
+        taskUpdated?: ITask;
+      }>,
+    ) => {
+      if (state.taskStatusSections) {
+        const sectionIndex = state.taskStatusSections.findIndex(
+          (section) => section.id === payload.sectionId,
+        );
+
+        if (sectionIndex !== -1) {
+          const section = state.taskStatusSections[sectionIndex];
+
+          const taskSelected = section.tasks?.find(
+            (task: ITask) => task.id === payload.taskId,
+          );
+
+          if (taskSelected) {
+            state.task = { ...taskSelected };
+
+            section.tasks = section.tasks ?? [];
+
+            section.tasks = section.tasks?.map((task: ITask) => {
+              if (task.id === payload.taskId && payload.taskUpdated) {
+                return { ...payload.taskUpdated };
+              }
+              return task;
+            });
+
+            state.taskStatusSections[sectionIndex] = { ...section };
+          }
+        }
+      }
     },
-    onClearTask: (state) => {
-      state.task = null;
+    onDeleteTask: (
+      state,
+      { payload }: PayloadAction<{ sectionId: string; taskId: string }>,
+    ) => {
+      if (state.taskStatusSections) {
+        const sectionIndex = state.taskStatusSections.findIndex(
+          (section) => section.id === payload.sectionId,
+        );
+        if (sectionIndex !== -1) {
+          const section = state.taskStatusSections[sectionIndex];
+
+          section.tasks = section.tasks ?? [];
+
+          section.tasks = section.tasks?.filter(
+            (task: ITask) => task.id !== payload.taskId,
+          );
+
+          state.taskStatusSections[sectionIndex] = { ...section };
+        }
+      }
     },
   },
   extraReducers: () => {},
@@ -104,8 +173,12 @@ const appSlice = createSlice({
 
 export const {
   onClearTask,
+  onUpdateTask,
+  onDeleteTask,
   onToggleTaskModal,
+  onToggleTaskUpdate,
   addTaskToSection,
+  setTaskSectionIdSelected,
   setTaskErrorMessage,
   setTaskSections,
   setTaskViewType,
