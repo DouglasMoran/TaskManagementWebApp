@@ -58,11 +58,6 @@ const useTask = () => {
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ title: value });
 
-  const resetStatus = () => {
-    dispatch(onClearTask());
-    onToggleModal();
-  };
-
   const handleSubmitTask = async () => {
     if (task) {
       if (isTaskUpdate) {
@@ -82,9 +77,10 @@ const useTask = () => {
             },
           }),
         );
+        onToggleModal();
       }
 
-      resetStatus();
+      dispatch(onClearTask());
     }
   };
 
