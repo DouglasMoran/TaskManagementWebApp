@@ -123,7 +123,53 @@ export const STATUS_SECTIONS_LIST: ITaskStatusSections[] = [
     tasks: [
       {
         id: '1000',
+        title: 'React Developer',
+        points: {
+          id: '2',
+          label: '2 Points',
+          value: '2',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: '1200',
         title: 'React Native Developer',
+        points: {
+          id: '2',
+          label: '2 Points',
+          value: '2',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: '1300',
+        title: 'Native',
         points: {
           id: '2',
           label: '2 Points',

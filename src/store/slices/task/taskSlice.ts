@@ -11,7 +11,7 @@ const initialState = {
   viewType: 'BOARD',
   searchQuery: '',
   task: null,
-  taskStatusSections: STATUS_SECTIONS_LIST,
+  taskStatusSections: STATUS_SECTIONS_LIST, // Dummy data tmp
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
@@ -75,12 +75,19 @@ const appSlice = createSlice({
 
       state.task = { ...task, ...payloadUpdated };
     },
-    // setTaskSections: (state, { payload }) => {},
+    setTaskSections: (state, { payload }) => {
+      state.taskStatusSections = payload;
+    },
   },
   extraReducers: () => {},
 });
 
-export const { setTaskErrorMessage, setTaskViewType, setSearchQuery, setTask } =
-  appSlice.actions;
+export const {
+  setTaskErrorMessage,
+  setTaskSections,
+  setTaskViewType,
+  setSearchQuery,
+  setTask,
+} = appSlice.actions;
 
 export default appSlice.reducer;
