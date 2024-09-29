@@ -1,8 +1,8 @@
+import { RiNotification3Line } from 'react-icons/ri';
+
 import Searchbar from '@components/organisms/Searchbar';
 import IconButton from '@components/atoms/IconButton';
 import Avatar from '@components/atoms/Avatar';
-
-import BellIcon from '@utils/icons/BellIcon';
 
 const Navbar = () => {
   return (
@@ -14,11 +14,11 @@ const Navbar = () => {
           type="outline"
           contentStyles={`border-primary-4`}
           icon={
-            <BellIcon svgClassName="text-neutral-2  hover:text-neutral-1" />
+            <RiNotification3Line className="h-6 w-6 text-neutral-2  hover:text-neutral-1" />
           }
           onClick={() => null}
         />
-        <Avatar />
+        <Avatar url="" />
       </div>
     </div>
   );

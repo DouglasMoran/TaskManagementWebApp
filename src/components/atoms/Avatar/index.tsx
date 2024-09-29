@@ -7,7 +7,7 @@ type AvatarProps = {
 const Avatar = ({ url = '', classContainer, classAvatar }: AvatarProps) => {
   return (
     <div
-      className={'h-[40px] w-[40px] rounded-3xl bg-tertiary-3 '.concat(
+      className={'h-10 w-10 rounded-3xl bg-neutral-6 overflow-hidden '.concat(
         classContainer ?? '',
       )}
     >

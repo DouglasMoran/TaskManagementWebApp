@@ -1,13 +1,12 @@
 import { useSelector } from 'react-redux';
 
-import IconButton from '@components/atoms/IconButton';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { MdGridView } from 'react-icons/md';
 
-import HamburgerMenuIcon from '@utils/icons/HamburgerMenuIcon';
+import IconButton from '@components/atoms/IconButton';
 
 import { setTaskViewType } from '@store/slices/task/taskSlice';
 import { MainState, useAppDispatch } from '@store/index';
-
-import GridIcon from '@utils/icons/GridIcon';
 
 import { TASK_VIEW } from '@constants/app';
 
@@ -24,11 +23,11 @@ const ToggleButton = () => {
         type="outline"
         contentStyles={`${!isBoardView && 'border'} border-primary-4 hover:border-neutral-1`}
         icon={
-          <HamburgerMenuIcon
-            svgClassName={
+          <AiOutlineMenu
+            className={
               !isBoardView
-                ? 'text-primary-4 hover:text-neutral-1'
-                : 'text-neutral-1'
+                ? 'h-6 w-6 text-primary-4 hover:text-neutral-1'
+                : 'h-6 w-6 text-neutral-1'
             }
           />
         }
@@ -38,11 +37,11 @@ const ToggleButton = () => {
         type="outline"
         contentStyles={`${isBoardView && 'border'} border-primary-4 hover:border-neutral-1`}
         icon={
-          <GridIcon
-            svgClassName={
+          <MdGridView
+            className={
               isBoardView
-                ? 'text-primary-4 hover:text-neutral-1'
-                : 'text-neutral-1'
+                ? 'h-6 w-6 text-primary-4 hover:text-neutral-1'
+                : 'h-6 w-6 text-neutral-1'
             }
           />
         }

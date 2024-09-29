@@ -10,8 +10,9 @@ import { PropsWithChildren } from 'react';
 type PopoverProps = PropsWithChildren<{
   contentTitle?: string;
   buttonTitle: string;
-  buttonIcon: JSX.Element;
+  buttonIcon?: JSX.Element;
   classContent?: string;
+  classBagde?: string;
 }>;
 
 const Popover = ({
@@ -20,6 +21,7 @@ const Popover = ({
   contentTitle,
   children,
   classContent,
+  classBagde,
 }: PopoverProps) => {
   return (
     <ShadcnPopover>
@@ -27,7 +29,9 @@ const Popover = ({
         <Badge
           title={buttonTitle}
           icon={buttonIcon}
-          containerClass="text-neutral-1 hover:bg-neutral-2 !p-[18px]"
+          containerClass={'text-neutral-1 hover:bg-neutral-2 !p-[18px] '.concat(
+            classBagde ?? '',
+          )}
         />
       </PopoverTrigger>
       <PopoverContent

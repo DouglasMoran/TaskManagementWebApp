@@ -1,26 +1,54 @@
+import { DndContext, closestCenter } from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  // sortableKeyboardCoordinates,
+} from '@dnd-kit/sortable';
+
 import TaskCard from '@components/organisms/TaskCard';
 
+import { DroppableContainer } from './componets/DroppableContainer';
+import { SortableItem } from './componets/SortableItem';
+
+import useDnd from '@hooks/useDnd';
+
 const TaskBoard = () => {
+  const { sensors, columns, handleDragEnd } = useDnd();
+
   return (
-    <div className="flex flex-1 gap-6 pt-6">
-      <TaskCard>
-        <TaskCard.Header />
-        <TaskCard.Content />
-        <TaskCard.Footer />
-      </TaskCard>
-
-      <TaskCard>
-        <TaskCard.Header />
-        <TaskCard.Content />
-        <TaskCard.Footer />
-      </TaskCard>
-
-      <TaskCard>
-        <TaskCard.Header />
-        <TaskCard.Content />
-        <TaskCard.Footer />
-      </TaskCard>
-    </div>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex h-full gap-4">
+        {columns?.map((section) => (
+          <DroppableContainer
+            key={section.id}
+            id={section.id}
+            title={section.title}
+          >
+            <SortableContext
+              id={section.id}
+              items={section.tasks ? section.tasks.map((task) => task.id) : []}
+              strategy={verticalListSortingStrategy}
+            >
+              {section.tasks?.map(
+                ({ id, title, member, ...restTaskData }, index) => (
+                  <SortableItem key={id} id={id} index={index}>
+                    <TaskCard>
+                      <TaskCard.Header title={title} />
+                      <TaskCard.Content {...restTaskData} />
+                      <TaskCard.Footer member={member} />
+                    </TaskCard>
+                  </SortableItem>
+                ),
+              )}
+            </SortableContext>
+          </DroppableContainer>
+        ))}
+      </div>
+    </DndContext>
   );
 };
 
