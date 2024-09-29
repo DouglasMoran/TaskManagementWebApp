@@ -5,10 +5,8 @@ import { CgAlarm } from 'react-icons/cg';
 import { RiPencilLine } from 'react-icons/ri';
 import { PiTrashLight } from 'react-icons/pi';
 
-import TaskActionButtons from '@components/molecules/TaskActionButtons';
-import Popover from '@components/molecules/Popover';
-import Avatar from '@components/atoms/Avatar';
-import Badge from '@components/atoms/Badge';
+import { TaskActionButtons, Popover } from '@components/molecules';
+import { Avatar, Badge } from '@components/atoms';
 
 import { ITask, ITaskLabel } from '@interfaces/app';
 

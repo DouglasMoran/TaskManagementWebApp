@@ -1,4 +1,4 @@
-import Button from '@components/atoms/Button';
+import { Button } from '@components/atoms';
 
 import { LiaPaperclipSolid } from 'react-icons/lia';
 import { PiChatCircle } from 'react-icons/pi';

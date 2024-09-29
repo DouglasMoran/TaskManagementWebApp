@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useSelector } from 'react-redux';
 
-import SidebarItem from '@components/molecules/SidebarItem';
+import { SidebarItem } from '@components/molecules';
 
 import { setTaskViewType } from '@store/slices/task/taskSlice';
 import { MainState, useAppDispatch } from '@store/index';

@@ -1,11 +1,12 @@
+import { PropsWithChildren } from 'react';
+
 import {
   Popover as ShadcnPopover,
   PopoverContent,
   PopoverTrigger,
 } from '@components/ui/popover';
 
-import Badge from '@components/atoms/Badge';
-import { PropsWithChildren } from 'react';
+import { Badge } from '@components/atoms';
 
 type PopoverProps = PropsWithChildren<{
   contentTitle?: string;

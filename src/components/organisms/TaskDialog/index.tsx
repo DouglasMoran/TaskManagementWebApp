@@ -1,3 +1,5 @@
+import { PropsWithChildren } from 'react';
+
 import { Dialog, DialogPanel } from '@headlessui/react';
 
 import { RiCalendarCheckLine } from 'react-icons/ri';
@@ -5,21 +7,16 @@ import { RiPriceTag3Fill } from 'react-icons/ri';
 import { FaCarBattery } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 
-import Calendar from '@components/atoms/Calendar';
-import Popover from '@components/molecules/Popover';
-import Button from '@components/atoms/Button';
-import Avatar from '@components/atoms/Avatar';
+import { Calendar, Button, Avatar } from '@components/atoms';
+import { Popover } from '@components/molecules';
 
-import EstimateList from './partials/EstimateList';
-import AssigneeList from './partials/AssigneeList';
-import LabelList from './partials/LabelList';
+import { EstimateList, AssigneeList, LabelList } from './components';
 
 import { formatDate } from '@utils/date-format';
 
-import useTask from '@hooks/useTask';
-
 import { ITaskLabel } from '@interfaces/app';
-import { PropsWithChildren } from 'react';
+
+import useTask from '@hooks/useTask';
 
 type TaskDialogProps = PropsWithChildren<{
   isOpen: boolean;
