@@ -23,7 +23,7 @@ const AssigneeList = ({
   );
 
   return (
-    <div className="mt-2 flex flex-col gap-2">
+    <div className="mt-2 flex flex-col gap-2 pt-72">
       {data.map((item: ITaskAssignee) => {
         const { id, name, profileUrl } = item ?? {};
         return (

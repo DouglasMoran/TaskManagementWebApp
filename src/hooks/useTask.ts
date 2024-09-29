@@ -1,20 +1,32 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 
 import { MainState, useAppDispatch } from '@store/index';
 
-import { setTask } from '@store/slices/task/taskSlice';
+import {
+  addTaskToSection,
+  onClearTask,
+  onToggleTaskModal,
+  setTask,
+} from '@store/slices/task/taskSlice';
 
 import { ITask } from '@interfaces/app';
 import { validationTaskSchema } from '@utils/validations';
 
+import { STATUS_COLUMN_ID } from '@constants/app';
+
 const useTask = () => {
   const dispatch = useAppDispatch();
 
-  const { task } = useSelector((state: MainState) => state.task);
+  const { task, isTaskModalOpen } = useSelector(
+    (state: MainState) => state.task,
+  );
 
   const isTaskValid = validationTaskSchema.isValidSync(task);
+
+  const onCloseTaskModal = () => dispatch(onToggleTaskModal());
 
   const onStoreTask = (task: Partial<ITask>) => {
     dispatch(setTask(task));
@@ -25,16 +37,26 @@ const useTask = () => {
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ title: value });
 
   const onSubmitTask = async () => {
-    try {
-      console.log('TASK ::: ', task);
-    } catch (error) {
-      console.log('ERROR ::: TASK ::: ', error);
+    if (task) {
+      dispatch(
+        addTaskToSection({
+          sectionId: STATUS_COLUMN_ID.WORKING,
+          task: {
+            ...task,
+            id: uuidv4(),
+          },
+        }),
+      );
+      dispatch(onClearTask());
+      onCloseTaskModal();
     }
   };
 
   return {
-    task,
+    isTaskModalOpen,
     isTaskValid,
+    task,
+    onCloseTaskModal,
     onChangeTaskTitle,
     onSubmitTask,
     onStoreTask,

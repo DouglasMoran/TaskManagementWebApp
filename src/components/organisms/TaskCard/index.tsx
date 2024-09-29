@@ -11,6 +11,7 @@ import Avatar from '@components/atoms/Avatar';
 import { ITask, ITaskLabel } from '@interfaces/app';
 
 import { formatDate } from '@utils/date-format';
+import { LABEL_LIST } from '@mocks/task';
 
 type TaskCardProps = {
   children: React.ReactNode;
@@ -55,7 +56,11 @@ TaskCard.Content = ({
           <Badge
             key={id}
             title={label}
-            containerClass="!bg-secondary-5 text-secondary-4"
+            containerClass={
+              label === LABEL_LIST[0].label
+                ? '!bg-secondary-5 !text-secondary-4'
+                : '!bg-tertiary-5 text-tertiary-4'
+            }
           />
         );
       })}

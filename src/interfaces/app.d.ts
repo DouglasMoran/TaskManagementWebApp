@@ -23,6 +23,7 @@ export interface TaskState {
   searchQuery: string;
   task: ITask | null;
   taskStatusSections: ITaskStatusSections[] | null;
+  isTaskModalOpen: boolean;
 }
 
 export interface ITaskEstimate {

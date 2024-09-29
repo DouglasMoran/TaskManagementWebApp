@@ -9,6 +9,8 @@ import {
   ITaskStatusSections,
 } from '@interfaces/app';
 
+import { STATUS_COLUMN_ID } from '@constants/app';
+
 export const ESTIMATES_LIST: ITaskEstimate[] = [
   {
     id: '0',
@@ -118,91 +120,21 @@ export const LABEL_LIST: ITaskLabel[] = [
 
 export const STATUS_SECTIONS_LIST: ITaskStatusSections[] = [
   {
-    id: '0001',
+    id: STATUS_COLUMN_ID.WORKING,
     title: 'Working',
-    tasks: [
-      {
-        id: '1000',
-        title: 'React Developer',
-        points: {
-          id: '2',
-          label: '2 Points',
-          value: '2',
-        },
-        member: {
-          id: '5',
-          name: 'Elene Conway',
-          profileUrl:
-            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
-        },
-        labels: [
-          {
-            id: '1',
-            value: '1',
-            label: 'ANDROID',
-          },
-        ],
-        date: new Date(),
-      },
-      {
-        id: '1200',
-        title: 'React Native Developer',
-        points: {
-          id: '2',
-          label: '2 Points',
-          value: '2',
-        },
-        member: {
-          id: '5',
-          name: 'Elene Conway',
-          profileUrl:
-            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
-        },
-        labels: [
-          {
-            id: '1',
-            value: '1',
-            label: 'ANDROID',
-          },
-        ],
-        date: new Date(),
-      },
-      {
-        id: '1300',
-        title: 'Native',
-        points: {
-          id: '2',
-          label: '2 Points',
-          value: '2',
-        },
-        member: {
-          id: '5',
-          name: 'Elene Conway',
-          profileUrl:
-            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
-        },
-        labels: [
-          {
-            id: '1',
-            value: '1',
-            label: 'ANDROID',
-          },
-        ],
-        date: new Date(),
-      },
-    ],
+    tasks: [],
   },
   {
-    id: '0002',
+    id: STATUS_COLUMN_ID.IN_PROGRESS,
     title: 'In progress',
     tasks: [
       {
         id: '2000',
-        title: 'Developer',
+        title: 'Responsive design',
         points: {
-          id: '2',
-          label: '2 Points',
-          value: '2',
+          id: '3',
+          label: '4 Points',
+          value: '4',
         },
         member: {
           id: '5',
@@ -222,8 +154,32 @@ export const STATUS_SECTIONS_LIST: ITaskStatusSections[] = [
     ],
   },
   {
-    id: '0003',
+    id: STATUS_COLUMN_ID.COMPLETED,
     title: 'Completed',
-    tasks: [],
+    tasks: [
+      {
+        id: '3000',
+        title: 'Drag and Drop Feature',
+        points: {
+          id: '4',
+          label: '8 Points',
+          value: '8',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+    ],
   },
 ];

@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { TaskState } from '@interfaces/app';
+import { ITask, TaskState } from '@interfaces/app';
 
 import { STATUS_SECTIONS_LIST } from '@mocks/task';
 
@@ -12,6 +12,7 @@ const initialState = {
   searchQuery: '',
   task: null,
   taskStatusSections: STATUS_SECTIONS_LIST, // Dummy data tmp
+  isTaskModalOpen: false,
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
@@ -78,11 +79,33 @@ const appSlice = createSlice({
     setTaskSections: (state, { payload }) => {
       state.taskStatusSections = payload;
     },
+    addTaskToSection: (
+      state,
+      { payload }: PayloadAction<{ sectionId: string; task: ITask }>,
+    ) => {
+      if (state.taskStatusSections) {
+        const section = state.taskStatusSections?.find(
+          (section) => section.id === payload.sectionId,
+        );
+        if (section) {
+          section.tasks?.push(payload.task);
+        }
+      }
+    },
+    onToggleTaskModal: (state) => {
+      state.isTaskModalOpen = !state.isTaskModalOpen;
+    },
+    onClearTask: (state) => {
+      state.task = null;
+    },
   },
   extraReducers: () => {},
 });
 
 export const {
+  onClearTask,
+  onToggleTaskModal,
+  addTaskToSection,
   setTaskErrorMessage,
   setTaskSections,
   setTaskViewType,
