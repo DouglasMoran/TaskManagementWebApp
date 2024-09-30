@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@components/atoms';
 
-const ErrorBoundaryFallback = () => {
+const NotFound = () => {
   const navigate = useNavigate();
 
   return (
@@ -31,4 +31,4 @@ const ErrorBoundaryFallback = () => {
   );
 };
 
-export default ErrorBoundaryFallback;
+export default NotFound;

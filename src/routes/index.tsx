@@ -10,6 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import { ROUTE_PATH } from '@constants/routes-paths';
 
+const NotFound = lazy(() => import('@components/templates/NotFound'));
 const LoadingPlaceholder = lazy(
   () => import('@components/templates/LoadingPlaceholder'),
 );
@@ -17,10 +18,10 @@ const ErrorBoundaryFallback = lazy(
   () => import('@components/templates/ErrorBoundaryFallback'),
 );
 
-const DashboardPage = lazy(() => import('@pages/Dashboard'));
+const DashboardPage = lazy(() => import('@pages/dashboard'));
 
 const AppRouter = () => {
-  const { ONBOARDING, DASHBOARD, TASKS } = ROUTE_PATH;
+  const { NOT_FOUND, ONBOARDING, DASHBOARD, TASKS } = ROUTE_PATH;
 
   return (
     <Router>
@@ -35,6 +36,7 @@ const AppRouter = () => {
             <Route path={ONBOARDING} element={<Navigate to={DASHBOARD} />} />
             <Route path={DASHBOARD} element={<DashboardPage />} />
             <Route path={TASKS} />
+            <Route path={NOT_FOUND} element={<NotFound />} />
           </Routes>
         </Suspense>
       </ErrorBoundary>
