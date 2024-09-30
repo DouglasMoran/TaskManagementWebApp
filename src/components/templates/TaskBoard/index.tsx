@@ -12,7 +12,11 @@ import { SortableItem } from './componets/SortableItem';
 
 import useDnd from '@hooks/useDnd';
 
-const TaskBoard = () => {
+type TaskBoardProps = {
+  classDroppableContainer?: string;
+};
+
+const TaskBoard = ({ classDroppableContainer }: TaskBoardProps) => {
   const { sensors, columns, handleDragEnd } = useDnd();
 
   return (
@@ -21,12 +25,13 @@ const TaskBoard = () => {
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex h-full space-x-4 overflow-x-auto">
+      <div className="flex h-screen space-x-4 overflow-x-auto">
         {columns?.map((section) => (
           <DroppableContainer
             key={section.id}
             id={section.id}
             title={section.title}
+            classContainer={classDroppableContainer}
           >
             <SortableContext
               id={section.id}

@@ -28,7 +28,7 @@ type TaskHeaderProps = {
 
 const TaskCard = ({ children }: TaskCardProps) => {
   return (
-    <div className="flex h-52 max-h-60 w-full flex-col justify-between overflow-hidden rounded-lg bg-neutral-4 py-4 pe-3 ps-4 md:min-w-72 lg:h-72 2xl:h-72 2xl:max-h-80">
+    <div className="flex h-52 max-h-60 w-full flex-col justify-between overflow-hidden rounded-lg bg-neutral-4 py-4 pe-3 ps-4 sm:h-[208px] sm:w-[340px] md:min-w-72 lg:h-72 2xl:h-72 2xl:max-h-80 2xl:w-[400px] 2xl:max-w-3xl">
       {children}
     </div>
   );

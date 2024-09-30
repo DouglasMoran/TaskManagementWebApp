@@ -122,7 +122,123 @@ export const STATUS_SECTIONS_LIST: ITaskStatusSections[] = [
   {
     id: STATUS_COLUMN_ID.WORKING,
     title: 'Working',
-    tasks: [],
+    tasks: [
+      {
+        id: 'jlkbsdjkbdjkbd',
+        title: 'Responsive design',
+        points: {
+          id: '3',
+          label: '4 Points',
+          value: '4',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: 'sdajasjkbaskjasdqaaa',
+        title: 'Responsive design',
+        points: {
+          id: '3',
+          label: '4 Points',
+          value: '4',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: '2000',
+        title: 'Responsive design',
+        points: {
+          id: '3',
+          label: '4 Points',
+          value: '4',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: '20289ehuih00',
+        title: 'Responsive design',
+        points: {
+          id: '3',
+          label: '4 Points',
+          value: '4',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+      {
+        id: '2anbqhbhwj378434000',
+        title: 'Responsive design',
+        points: {
+          id: '3',
+          label: '4 Points',
+          value: '4',
+        },
+        member: {
+          id: '5',
+          name: 'Elene Conway',
+          profileUrl:
+            'https://robohash.org/veldoloresomnis.png?size=50x50&set=set1',
+        },
+        labels: [
+          {
+            id: '1',
+            value: '1',
+            label: 'ANDROID',
+          },
+        ],
+        date: new Date(),
+      },
+    ],
   },
   {
     id: STATUS_COLUMN_ID.IN_PROGRESS,
