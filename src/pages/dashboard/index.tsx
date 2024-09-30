@@ -7,6 +7,7 @@ const Dashboard = () => {
     <>
       {isBrowser && <WebBrowserLayout />}
       {isAndroid && <AndroidLayout />}
+      {/* Here will be added iOS Layout */}
     </>
   );
 };

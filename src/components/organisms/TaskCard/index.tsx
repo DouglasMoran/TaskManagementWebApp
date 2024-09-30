@@ -51,7 +51,7 @@ const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
         classContent="!p-2 !hover:bg-neutral-6"
         classBagde=" !lg:ps-2 !p-[2px] lg:bg-transparent lg:hover:bg-neutral-6"
       >
-        <div className="flex flex-col ">
+        <div className="flex flex-col space-y-2">
           <Badge
             title="Edit"
             icon={<RiPencilLine className="h-5 w-5 text-neutral-1" />}
