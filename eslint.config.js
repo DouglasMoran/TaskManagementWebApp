@@ -1,21 +1,32 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import typescriptEslint from '@typescript-eslint/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
+import prettier from 'eslint-plugin-prettier';
+import tailwindcss from 'eslint-plugin-tailwindcss';
+import react from 'eslint-plugin-react';
 
-export default tseslint.config(
-  { ignores: ['dist'] },
+const config = [
+  js.configs.recommended,
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: { ...globals.browser, JSX: 'readonly' },
+      parser: typescriptParser,
+      parserOptions: {
+        jsx: true,
+      },
     },
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      '@typescript-eslint': typescriptEslint,
+      prettier,
+      tailwindcss,
+      react,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -23,6 +34,21 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      'prettier/prettier': 'error',
+      '@typescript-eslint/no-unused-vars': ['warn'],
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      'react/prop-types': 'off',
+      '@typescript-eslint/no-unused-vars': 1,
+      'tailwindcss/classnames-order': 'warn',
+      'no-unused-vars': 'off',
     },
   },
-)
+  {
+    plugins: { prettier },
+    rules: {
+      'prettier/prettier': 'error',
+    },
+  },
+];
+
+export default config;
