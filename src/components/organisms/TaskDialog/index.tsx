@@ -23,7 +23,6 @@ import { formatDate } from '@utils/date-format';
 import { TaskTag } from '@interfaces/app';
 
 import useTask from '@hooks/useTask';
-import { TASK_POINT_ESTIMATES } from '@mocks/task';
 
 type TaskDialogProps = PropsWithChildren<{
   isOpen: boolean;
