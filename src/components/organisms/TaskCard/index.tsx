@@ -5,10 +5,17 @@ import { CgAlarm } from 'react-icons/cg';
 import { RiPencilLine } from 'react-icons/ri';
 import { PiTrashLight } from 'react-icons/pi';
 
-import { TaskActionButtons, Popover } from '@components/molecules';
-import { Avatar, Badge } from '@components/atoms';
+import TaskActionButtons from '@components/molecules/TaskActionButtons';
+import Popover from '@components/molecules/Popover';
+import Avatar from '@components/atoms/Avatar';
+import Badge from '@components/atoms/Badge';
 
-import { ITask, TaskPointEstimate, TaskTag } from '@interfaces/app';
+import {
+  ITask,
+  PopoverType,
+  TaskPointEstimate,
+  TaskTag,
+} from '@interfaces/app';
 
 import { formatDate } from '@utils/date-format';
 
@@ -28,7 +35,7 @@ type TaskHeaderProps = {
 type ContentProps = {
   dueDate: ITask['dueDate'];
   tags: ITask['tags'];
-  pointEstimate: TaskPointEstimate;
+  pointEstimate: PopoverType<TaskPointEstimate> | TaskPointEstimate | null;
 };
 
 const TaskCard = ({ children }: TaskCardProps) => {
@@ -75,7 +82,11 @@ const Header = ({ title, taskId }: TaskHeaderProps) => {
   );
 };
 
-TaskCard.Content = ({ pointEstimate, tags, dueDate }: ContentProps) => {
+TaskCard.Content = ({
+  pointEstimate = 'ZERO',
+  tags,
+  dueDate,
+}: ContentProps) => {
   const pointSelected = TASK_POINT_ESTIMATES.find(
     (p) => p.value === pointEstimate,
   );

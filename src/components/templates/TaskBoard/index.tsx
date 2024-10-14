@@ -39,15 +39,15 @@ const TaskBoard = ({ classDroppableContainer }: TaskBoardProps) => {
               strategy={verticalListSortingStrategy}
             >
               {section.tasks?.map(
-                ({ id, name, assignee, ...restTaskData }, index) => (
+                ({ id, name, assignee, tags, date, pointEstimate }, index) => (
                   <SortableItem key={id} id={id} index={index}>
                     <TaskCard>
-                      <TaskCard.Header
-                        title={name}
-                        sectionId={section.id}
-                        taskId={id}
+                      <TaskCard.Header title={name} taskId={id} />
+                      <TaskCard.Content
+                        tags={tags}
+                        dueDate={date}
+                        pointEstimate={pointEstimate}
                       />
-                      <TaskCard.Content {...restTaskData} />
                       <TaskCard.Footer assignee={assignee} />
                     </TaskCard>
                   </SortableItem>

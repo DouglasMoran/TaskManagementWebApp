@@ -7,9 +7,9 @@ export const validationTaskSchema = object({
     value: string().required('Points value is required'),
   }).required(),
   assignee: object({
-    id: string().required('User ID is required'),
+    id: string().notRequired(),
     fullName: string().required('User name is required'),
-    type: string().required('User type is required'),
+    type: string().notRequired(),
     avatar: string().url('Invalid profile URL').notRequired().nullable(),
     email: string().email('Invalid user email').required(),
   }).required(),

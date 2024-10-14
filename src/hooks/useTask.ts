@@ -22,7 +22,12 @@ import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
 
 import { validationTaskSchema } from '@utils/validations';
 
-import { ICreateTaskInput, ITask, IUpdateTaskInput } from '@interfaces/app';
+import {
+  ICreateTaskInput,
+  ITask,
+  IUpdateTaskInput,
+  TaskPointEstimate,
+} from '@interfaces/app';
 
 type QueryTask = {
   tasks: ITask[];

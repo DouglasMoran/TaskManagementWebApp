@@ -8,8 +8,10 @@ import { FaCarBattery } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 
 import Calendar from '@components/atoms/Calendar';
-import { Button, Avatar } from '@components/atoms';
-import { Popover } from '@components/molecules';
+import Avatar from '@components/atoms/Avatar';
+import Button from '@components/atoms/Button';
+
+import Popover from '@components/molecules/Popover';
 
 import AssigneeList from './components/AssigneeList';
 import EstimateList from './components/EstimateList';
@@ -21,6 +23,7 @@ import { formatDate } from '@utils/date-format';
 import { TaskTag } from '@interfaces/app';
 
 import useTask from '@hooks/useTask';
+import { TASK_POINT_ESTIMATES } from '@mocks/task';
 
 type TaskDialogProps = PropsWithChildren<{
   isOpen: boolean;
