@@ -5,20 +5,16 @@ import { ITask, ITaskStatusSections, IUser, TaskState } from '@interfaces/app';
 import { COLUMN_TASK_STATUS } from '@mocks/task';
 
 const initialState = {
-  loading: 'idle',
-  errorMessage: '',
-  data: null,
   viewType: 'BOARD',
   searchQuery: '',
-  task: null,
   isTaskModalOpen: false,
   isTaskUpdate: false,
-  // Section selected is use tmp to achieve task updating
-  taskSectionIdSelected: '',
-  columnTaskStatus: COLUMN_TASK_STATUS, // Dummy data tmp
+  allowRefreshTasks: true,
+  columnTaskStatus: COLUMN_TASK_STATUS, // mock initial column state
   // query keys
   profile: null,
   users: null,
+  task: null,
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
@@ -34,6 +30,12 @@ const appSlice = createSlice({
       if (!Array.isArray(payload)) return;
 
       state.users = payload;
+    },
+    setPreventRefreshTasks: (state) => {
+      state.allowRefreshTasks = false;
+    },
+    enableRefreshTasks: (state) => {
+      state.allowRefreshTasks = true;
     },
     setTaskViewType: (state, { payload }) => {
       state.viewType = payload;
@@ -90,8 +92,11 @@ const appSlice = createSlice({
 
       state.task = { ...task, ...payloadUpdated };
     },
-    setTaskSections: (state, { payload }) => {
-      state.columnTaskStatus = payload;
+    setTaskSections: (
+      state,
+      { payload }: PayloadAction<ITaskStatusSections[]>,
+    ) => {
+      state.columnTaskStatus = [...payload];
     },
     onToggleTaskModal: (state) => {
       state.isTaskModalOpen = !state.isTaskModalOpen;
@@ -145,14 +150,16 @@ const appSlice = createSlice({
 
 export const {
   onClearTask,
-  setTaskById,
   onToggleTaskModal,
+  enableRefreshTasks,
+  setPreventRefreshTasks,
   setTaskSections,
   setTaskViewType,
   setSearchQuery,
   setTask,
   // query actions
   filterTasksByStatus,
+  setTaskById,
   setProfile,
   setUsers,
 } = appSlice.actions;

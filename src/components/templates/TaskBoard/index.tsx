@@ -17,13 +17,14 @@ type TaskBoardProps = {
 };
 
 const TaskBoard = ({ classDroppableContainer }: TaskBoardProps) => {
-  const { sensors, columns, handleDragEnd } = useDnd();
+  const { sensors, columns, handleDragEnd, onPreventRefreshTasks } = useDnd();
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      onDragStart={onPreventRefreshTasks}
     >
       <div className="flex h-screen space-x-4 overflow-x-auto">
         {columns?.map((section) => (

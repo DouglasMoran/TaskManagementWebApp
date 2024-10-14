@@ -71,17 +71,13 @@ export interface ModuleItem {
 }
 
 export interface TaskState {
-  loading: LoadingType;
-  data?: any | null;
-  errorMessage: string;
   viewType: TaskViewType;
   searchQuery: string;
   task: ITask | null;
   columnTaskStatus: ITaskStatusSections[];
+  allowRefreshTasks: boolean;
   isTaskModalOpen: boolean;
   isTaskUpdate: boolean;
-  // Tmp use for updating task
-  taskSectionIdSelected: string;
   // query keys
   profile: IUser | null;
   users: IUser[] | null;

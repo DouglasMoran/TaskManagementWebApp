@@ -8,13 +8,16 @@ import {
   arrayMove,
   // sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { setTaskSections } from '@store/slices/task/taskSlice';
-import { MainState } from '@store/index';
+import {
+  setPreventRefreshTasks,
+  setTaskSections,
+} from '@store/slices/task/taskSlice';
+import { MainState, useAppDispatch } from '@store/index';
 
 const useDnd = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { columnTaskStatus: columns } = useSelector(
     (state: MainState) => state.task,
@@ -23,6 +26,8 @@ const useDnd = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+
+  const onPreventRefreshTasks = () => dispatch(setPreventRefreshTasks());
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -81,7 +86,17 @@ const useDnd = () => {
           return { ...column, tasks: sourceItems };
         }
         if (column.id === targetColumnId) {
-          return { ...column, tasks: targetItems };
+          return {
+            ...column,
+
+            tasks: targetItems.map((task) => {
+              return {
+                ...task,
+                // Update the task's status
+                status: column.id,
+              };
+            }),
+          };
         }
         return column;
       });
@@ -93,6 +108,7 @@ const useDnd = () => {
   return {
     sensors,
     columns,
+    onPreventRefreshTasks,
     handleDragEnd,
   };
 };

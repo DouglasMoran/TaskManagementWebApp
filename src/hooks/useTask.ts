@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { MainState, useAppDispatch } from '@store/index';
 
 import {
-  onClearTask,
+  enableRefreshTasks,
   onToggleTaskModal,
   setTaskById,
   setTask,
@@ -47,16 +47,11 @@ const useTask = () => {
     { loading: isLoadingCreation, error: errorCreation, data: dataCreation },
   ] = useMutation(CREATE_TASK);
   // Get all taks
-  const {
-    loading: isLoading,
-    error,
-    data,
-    refetch: refreshTasks,
-  } = useQuery<QueryTask>(GET_ALL_TASK);
+  const [getTasks, { loading: isLoading, error, data, refetch: refreshTasks }] =
+    useLazyQuery<QueryTask>(GET_ALL_TASK);
 
-  const { task, isTaskModalOpen, isTaskUpdate } = useSelector(
-    (state: MainState) => state.task,
-  );
+  const { task, isTaskModalOpen, isTaskUpdate, allowRefreshTasks } =
+    useSelector((state: MainState) => state.task);
 
   const isTaskValid = validationTaskSchema.isValidSync(task);
 
@@ -69,6 +64,8 @@ const useTask = () => {
   const onChangeTaskTitle = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ name: value });
+
+  const allowRefreshTask = () => dispatch(enableRefreshTasks());
 
   const onUpdate = (taskId: string) => {
     dispatch(setTaskById({ taskId }));
@@ -92,6 +89,9 @@ const useTask = () => {
     } catch (error) {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: DELETING TASK ::: ', error);
+    } finally {
+      allowRefreshTask();
+      window.location.reload();
     }
   };
 
@@ -120,7 +120,8 @@ const useTask = () => {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: CREATE TASK ::: ', error);
     } finally {
-      onToggleModal();
+      allowRefreshTask();
+      window.location.reload();
     }
   };
 
@@ -150,7 +151,8 @@ const useTask = () => {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: UPDATE TASK ::: ', error);
     } finally {
-      onToggleModal();
+      allowRefreshTask();
+      window.location.reload();
     }
   };
 
@@ -162,15 +164,20 @@ const useTask = () => {
         await handleCreateTask();
       }
 
-      dispatch(onClearTask());
+      onToggleModal();
     }
   };
 
   useEffect(() => {
-    if (data?.tasks) {
-      dispatch(filterTasksByStatus(data.tasks));
+    console.log('allowRefreshTasks :::: CURRENT STATE ::: ', allowRefreshTasks);
+    if (allowRefreshTasks) {
+      getTasks().then((event) => {
+        if (event.data?.tasks) {
+          dispatch(filterTasksByStatus(event.data.tasks));
+        }
+      });
     }
-  }, [data, dispatch]);
+  }, [allowRefreshTasks, dispatch]);
 
   return {
     isLoadingUpdating,

@@ -12,6 +12,7 @@ export const GET_ALL_TASK = gql`
       assignee {
         fullName
         email
+        id
       }
     }
   }
