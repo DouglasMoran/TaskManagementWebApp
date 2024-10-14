@@ -7,60 +7,55 @@ import { MainState, useAppDispatch } from '@store/index';
 
 import {
   onClearTask,
-  onDeleteTask,
-  onUpdateTask,
   onToggleTaskModal,
+  setTaskById,
   setTask,
-  onToggleTaskUpdate,
-  setTaskSectionIdSelected,
   filterTasksByStatus,
 } from '@store/slices/task/taskSlice';
 
+import {
+  CREATE_TASK,
+  UPDATE_TASK,
+  DELETE_TASK,
+} from '@services/graphql/mutations/task';
 import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
-import { CREATE_TASK } from '@services/graphql/mutations/task';
 
 import { validationTaskSchema } from '@utils/validations';
 
-import { ICreateTaskInput, ITask } from '@interfaces/app';
+import { ICreateTaskInput, ITask, IUpdateTaskInput } from '@interfaces/app';
 
 type QueryTask = {
   tasks: ITask[];
 };
 
-type TaskActionProps = {
-  sectionId: string;
-  taskId: string;
-  taskUpdated?: ITask;
-};
-
 const useTask = () => {
   const dispatch = useAppDispatch();
 
+  // Delete a task
+  const [
+    deleteTask,
+    { loading: isDeleting, error: errrorDeleting, data: dataDeleting },
+  ] = useMutation(DELETE_TASK);
+  // Update a task
+  const [
+    updateTask,
+    { loading: isLoadingUpdating, error: errorUpdating, data: dataUpdating },
+  ] = useMutation(UPDATE_TASK);
+  // Create new task
   const [
     createTask,
     { loading: isLoadingCreation, error: errorCreation, data: dataCreation },
   ] = useMutation(CREATE_TASK);
+  // Get all taks
   const { loading: isLoading, error, data } = useQuery<QueryTask>(GET_ALL_TASK);
 
-  const { task, isTaskModalOpen, isTaskUpdate, taskSectionIdSelected } =
-    useSelector((state: MainState) => state.task);
+  const { task, isTaskModalOpen, isTaskUpdate } = useSelector(
+    (state: MainState) => state.task,
+  );
 
   const isTaskValid = validationTaskSchema.isValidSync(task);
 
   const onToggleModal = () => dispatch(onToggleTaskModal());
-
-  const onToggleEditMode = () => dispatch(onToggleTaskUpdate());
-
-  const onUpdate = ({ sectionId, taskId, taskUpdated }: TaskActionProps) => {
-    dispatch(onUpdateTask({ sectionId, taskId, taskUpdated }));
-    onToggleEditMode();
-    onToggleModal();
-    dispatch(setTaskSectionIdSelected(sectionId));
-  };
-
-  const onDelete = ({ sectionId, taskId }: TaskActionProps) => {
-    dispatch(onDeleteTask({ sectionId, taskId }));
-  };
 
   const onStoreTask = (task: Partial<ITask>) => {
     dispatch(setTask(task));
@@ -69,6 +64,28 @@ const useTask = () => {
   const onChangeTaskTitle = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ name: value });
+
+  const onUpdate = (taskId: string) => {
+    dispatch(setTaskById({ taskId }));
+    onToggleModal();
+  };
+
+  const onDelete = async (taskId: string) => {
+    try {
+      const deleteTaskInput = {
+        id: taskId,
+      };
+
+      await deleteTask({
+        variables: {
+          input: deleteTaskInput,
+        },
+      });
+    } catch (error) {
+      // Here the error will be reported using Sentry integration for example
+      console.log('::: ERROR :::: DELETING TASK ::: ', error);
+    }
+  };
 
   const handleCreateTask = async () => {
     if (!task) return;
@@ -89,22 +106,46 @@ const useTask = () => {
         },
       });
     } catch (error) {
-      console.log('ERROR ::: CREATE TASK ::: ', error);
+      // Here the error will be reported using Sentry integration for example
+      console.log('::: ERROR :::: CREATE TASK ::: ', error);
+    } finally {
+      onToggleModal();
+    }
+  };
+
+  const handleUpdateTask = async () => {
+    if (!task) return;
+
+    try {
+      const updateTaskInput: IUpdateTaskInput = {
+        id: task.id,
+        assigneeId: task.assignee?.id ?? '',
+        dueDate: task.date,
+        tags: task.tags,
+        name: task.name,
+        status: task.status,
+        pointEstimate: task.pointEstimate?.value ?? 'ZERO',
+      };
+
+      updateTask({
+        variables: {
+          input: updateTaskInput,
+        },
+      });
+    } catch (error) {
+      // Here the error will be reported using Sentry integration for example
+      console.log('::: ERROR :::: UPDATE TASK ::: ', error);
+    } finally {
+      onToggleModal();
     }
   };
 
   const handleSubmitTask = async () => {
     if (task) {
       if (isTaskUpdate) {
-        onUpdate({
-          sectionId: taskSectionIdSelected,
-          taskId: task.id,
-          taskUpdated: task,
-        });
-        dispatch(setTaskSectionIdSelected(null));
+        await handleUpdateTask();
       } else {
         await handleCreateTask();
-        onToggleModal();
       }
 
       dispatch(onClearTask());
@@ -118,13 +159,19 @@ const useTask = () => {
   }, [data, dispatch]);
 
   return {
+    isLoadingUpdating,
     isLoadingCreation,
+    isDeleting,
+    isLoading,
+    errrorDeleting,
+    errorUpdating,
     errorCreation,
+    dataUpdating,
+    dataDeleting,
     dataCreation,
     isTaskModalOpen,
     isTaskUpdate,
     isTaskValid,
-    isLoading,
     error,
     data,
     task,

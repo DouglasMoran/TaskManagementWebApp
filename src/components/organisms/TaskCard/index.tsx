@@ -22,7 +22,6 @@ type TaskCardProps = {
 
 type TaskHeaderProps = {
   title: ITask['name'];
-  sectionId: string;
   taskId: string;
 };
 
@@ -40,7 +39,7 @@ const TaskCard = ({ children }: TaskCardProps) => {
   );
 };
 
-const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
+const Header = ({ title, taskId }: TaskHeaderProps) => {
   const { onUpdate, onDelete } = useTask();
 
   return (
@@ -62,13 +61,13 @@ const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
             title="Edit"
             icon={<RiPencilLine className="h-5 w-5 text-neutral-1" />}
             containerClass="text-base text-neutral-1 font-normal font-sf justify-start gap-4 bg-neutral-6 hover:bg-neutral-2"
-            onClick={() => onUpdate({ ...metadataActions })}
+            onClick={() => onUpdate(taskId)}
           />
           <Badge
             title="Delete"
             icon={<PiTrashLight className="h-5 w-5 text-neutral-1" />}
             containerClass="text-base text-neutral-1 font-normal font-sf justify-between bg-neutral-6 hover:bg-neutral-2"
-            onClick={() => onDelete({ ...metadataActions })}
+            onClick={() => onDelete(taskId)}
           />
         </div>
       </Popover>

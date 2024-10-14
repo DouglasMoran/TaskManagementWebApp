@@ -55,6 +55,10 @@ export interface ICreateTaskInput {
   tags: TaskTag[];
 }
 
+export interface IUpdateTaskInput extends ICreateTaskInput {
+  id: string;
+}
+
 export type PopoverType<V, K = string> = {
   label: K;
   value: V;

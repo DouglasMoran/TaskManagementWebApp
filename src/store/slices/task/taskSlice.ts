@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ITask, IUser, TaskState } from '@interfaces/app';
+import { ITask, ITaskStatusSections, IUser, TaskState } from '@interfaces/app';
 
 import { COLUMN_TASK_STATUS } from '@mocks/task';
 
@@ -34,12 +34,6 @@ const appSlice = createSlice({
       if (!Array.isArray(payload)) return;
 
       state.users = payload;
-    },
-    setTaskSectionIdSelected: (state, { payload }) => {
-      state.taskSectionIdSelected = payload;
-    },
-    setTaskErrorMessage: (state, { payload }) => {
-      state.errorMessage = payload;
     },
     setTaskViewType: (state, { payload }) => {
       state.viewType = payload;
@@ -101,72 +95,35 @@ const appSlice = createSlice({
     },
     onToggleTaskModal: (state) => {
       state.isTaskModalOpen = !state.isTaskModalOpen;
-    },
-    onToggleTaskUpdate: (state) => {
-      state.isTaskUpdate = !state.isTaskUpdate;
+
+      // Switch to create task mode
+      if (!state.isTaskModalOpen) state.isTaskUpdate = false;
+      // Clear task when is not editing mode and modal is dismissed
+      if (!state.isTaskModalOpen && !state.isTaskUpdate) state.task = null;
+      // Clear task when is editing mode and modal is dismissed
+      if (!state.isTaskModalOpen && state.isTaskUpdate) state.task = null;
     },
     onClearTask: (state) => {
       state.task = null;
     },
-    onUpdateTask: (
+    setTaskById: (
       state,
       {
         payload,
       }: PayloadAction<{
-        sectionId: string;
         taskId: string;
-        taskUpdated?: ITask;
       }>,
     ) => {
-      if (state.columnTaskStatus) {
-        const sectionIndex = state.columnTaskStatus.findIndex(
-          (section) => section.id === payload.sectionId,
-        );
+      // Switch to edit mode
+      state.isTaskUpdate = true;
 
-        if (sectionIndex !== -1) {
-          const section = state.columnTaskStatus[sectionIndex];
-
-          const taskSelected = section.tasks?.find(
-            (task: ITask) => task.id === payload.taskId,
-          );
-
-          if (taskSelected) {
-            state.task = { ...taskSelected };
-
-            section.tasks = section.tasks ?? [];
-
-            section.tasks = section.tasks?.map((task: ITask) => {
-              if (task.id === payload.taskId && payload.taskUpdated) {
-                return { ...payload.taskUpdated };
-              }
-              return task;
-            });
-
-            state.columnTaskStatus[sectionIndex] = { ...section };
+      state.columnTaskStatus.forEach((column: ITaskStatusSections) => {
+        column.tasks?.forEach((task: ITask) => {
+          if (task.id === payload.taskId) {
+            state.task = task;
           }
-        }
-      }
-    },
-    onDeleteTask: (
-      state,
-      { payload }: PayloadAction<{ sectionId: string; taskId: string }>,
-    ) => {
-      if (state.columnTaskStatus) {
-        const sectionIndex = state.columnTaskStatus.findIndex(
-          (section) => section.id === payload.sectionId,
-        );
-        if (sectionIndex !== -1) {
-          const section = state.columnTaskStatus[sectionIndex];
-
-          section.tasks = section.tasks ?? [];
-
-          section.tasks = section.tasks?.filter(
-            (task: ITask) => task.id !== payload.taskId,
-          );
-
-          state.columnTaskStatus[sectionIndex] = { ...section };
-        }
-      }
+        });
+      });
     },
     filterTasksByStatus: (state, { payload }: PayloadAction<ITask[]>) => {
       state.columnTaskStatus.forEach((column) => {
@@ -188,12 +145,8 @@ const appSlice = createSlice({
 
 export const {
   onClearTask,
-  onUpdateTask,
-  onDeleteTask,
+  setTaskById,
   onToggleTaskModal,
-  onToggleTaskUpdate,
-  setTaskSectionIdSelected,
-  setTaskErrorMessage,
   setTaskSections,
   setTaskViewType,
   setSearchQuery,

@@ -20,3 +20,35 @@ export const CREATE_TASK = gql`
     }
   }
 `;
+
+export const UPDATE_TASK = gql`
+  mutation UpdateTask($input: UpdateTaskInput!) {
+    updateTask(input: $input) {
+      id
+      name
+      dueDate
+      pointEstimate
+      status
+      assignee {
+        avatar
+        id
+        email
+        fullName
+        type
+        createdAt
+        updatedAt
+      }
+      tags
+    }
+  }
+`;
+
+export const DELETE_TASK = gql`
+  mutation DeleteTask($input: DeleteTaskInput!) {
+    deleteTask(input: $input) {
+      id
+      name
+      status
+    }
+  }
+`;
