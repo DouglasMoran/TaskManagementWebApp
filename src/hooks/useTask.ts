@@ -22,12 +22,7 @@ import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
 
 import { validationTaskSchema } from '@utils/validations';
 
-import {
-  ICreateTaskInput,
-  ITask,
-  IUpdateTaskInput,
-  TaskPointEstimate,
-} from '@interfaces/app';
+import { ICreateTaskInput, ITask, IUpdateTaskInput } from '@interfaces/app';
 
 type QueryTask = {
   tasks: ITask[];
@@ -52,7 +47,12 @@ const useTask = () => {
     { loading: isLoadingCreation, error: errorCreation, data: dataCreation },
   ] = useMutation(CREATE_TASK);
   // Get all taks
-  const { loading: isLoading, error, data } = useQuery<QueryTask>(GET_ALL_TASK);
+  const {
+    loading: isLoading,
+    error,
+    data,
+    refetch: refreshTasks,
+  } = useQuery<QueryTask>(GET_ALL_TASK);
 
   const { task, isTaskModalOpen, isTaskUpdate } = useSelector(
     (state: MainState) => state.task,
@@ -86,6 +86,9 @@ const useTask = () => {
           input: deleteTaskInput,
         },
       });
+
+      // Refetch task list
+      await refreshTasks();
     } catch (error) {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: DELETING TASK ::: ', error);
@@ -110,6 +113,9 @@ const useTask = () => {
           input: taskInput,
         },
       });
+
+      // Refetch task list
+      await refreshTasks();
     } catch (error) {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: CREATE TASK ::: ', error);
@@ -132,11 +138,14 @@ const useTask = () => {
         pointEstimate: task.pointEstimate?.value ?? 'ZERO',
       };
 
-      updateTask({
+      await updateTask({
         variables: {
           input: updateTaskInput,
         },
       });
+
+      // Refetch task list
+      await refreshTasks();
     } catch (error) {
       // Here the error will be reported using Sentry integration for example
       console.log('::: ERROR :::: UPDATE TASK ::: ', error);
