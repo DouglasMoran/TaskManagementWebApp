@@ -30,7 +30,7 @@ const AssigneeList = ({ onSelect }: EstimateListProps) => {
           <div
             key={id}
             onClick={() => handleSelectMember(item)}
-            className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2 items-center justify-start"
+            className="flex w-full flex-row items-center justify-start gap-4 text-neutral-1 hover:bg-neutral-2"
           >
             <Avatar url={avatar ?? ''} />
             <p>{fullName}</p>

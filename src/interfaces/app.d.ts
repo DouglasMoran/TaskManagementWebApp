@@ -73,7 +73,7 @@ export interface TaskState {
   viewType: TaskViewType;
   searchQuery: string;
   task: ITask | null;
-  columnTaskStatus: ITaskStatusSections[] | null;
+  columnTaskStatus: ITaskStatusSections[];
   isTaskModalOpen: boolean;
   isTaskUpdate: boolean;
   // Tmp use for updating task

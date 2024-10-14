@@ -108,19 +108,6 @@ const appSlice = createSlice({
     onClearTask: (state) => {
       state.task = null;
     },
-    addTask: (
-      state,
-      { payload }: PayloadAction<{ sectionId: string; task: ITask }>,
-    ) => {
-      if (state.columnTaskStatus) {
-        const section = state.columnTaskStatus?.find(
-          (section) => section.id === payload.sectionId,
-        );
-        if (section) {
-          section.tasks?.push(payload.task);
-        }
-      }
-    },
     onUpdateTask: (
       state,
       {
@@ -181,6 +168,20 @@ const appSlice = createSlice({
         }
       }
     },
+    filterTasksByStatus: (state, { payload }: PayloadAction<ITask[]>) => {
+      state.columnTaskStatus.forEach((column) => {
+        column.tasks = [];
+      });
+
+      payload.forEach((task) => {
+        const column = state.columnTaskStatus.find(
+          (column) => column.id === task.status,
+        );
+        if (column) {
+          column.tasks?.push(task);
+        }
+      });
+    },
   },
   extraReducers: () => {},
 });
@@ -191,7 +192,6 @@ export const {
   onDeleteTask,
   onToggleTaskModal,
   onToggleTaskUpdate,
-  addTask,
   setTaskSectionIdSelected,
   setTaskErrorMessage,
   setTaskSections,
@@ -199,6 +199,7 @@ export const {
   setSearchQuery,
   setTask,
   // query actions
+  filterTasksByStatus,
   setProfile,
   setUsers,
 } = appSlice.actions;

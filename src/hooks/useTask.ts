@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 import { useMutation, useQuery } from '@apollo/client';
@@ -13,6 +13,7 @@ import {
   setTask,
   onToggleTaskUpdate,
   setTaskSectionIdSelected,
+  filterTasksByStatus,
 } from '@store/slices/task/taskSlice';
 
 import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
@@ -21,6 +22,10 @@ import { CREATE_TASK } from '@services/graphql/mutations/task';
 import { validationTaskSchema } from '@utils/validations';
 
 import { ICreateTaskInput, ITask } from '@interfaces/app';
+
+type QueryTask = {
+  tasks: ITask[];
+};
 
 type TaskActionProps = {
   sectionId: string;
@@ -35,7 +40,7 @@ const useTask = () => {
     createTask,
     { loading: isLoadingCreation, error: errorCreation, data: dataCreation },
   ] = useMutation(CREATE_TASK);
-  const { loading: isLoading, error, data } = useQuery(GET_ALL_TASK);
+  const { loading: isLoading, error, data } = useQuery<QueryTask>(GET_ALL_TASK);
 
   const { task, isTaskModalOpen, isTaskUpdate, taskSectionIdSelected } =
     useSelector((state: MainState) => state.task);
@@ -105,6 +110,12 @@ const useTask = () => {
       dispatch(onClearTask());
     }
   };
+
+  useEffect(() => {
+    if (data?.tasks) {
+      dispatch(filterTasksByStatus(data.tasks));
+    }
+  }, [data, dispatch]);
 
   return {
     isLoadingCreation,
