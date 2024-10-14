@@ -16,7 +16,7 @@ import { MainState } from '@store/index';
 const useDnd = () => {
   const dispatch = useDispatch();
 
-  const { taskStatusSections: columns } = useSelector(
+  const { columnTaskStatus: columns } = useSelector(
     (state: MainState) => state.task,
   );
 

@@ -25,6 +25,7 @@ const ActionButtons = () => {
         <TaskDialog.AssigneeButton />
         <TaskDialog.LabelButton />
         <TaskDialog.CalendarButton />
+        <TaskDialog.TaskStatusButton />
       </TaskDialog>
     </div>
   );

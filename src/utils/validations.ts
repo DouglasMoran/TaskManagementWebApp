@@ -18,4 +18,5 @@ export const validationTaskSchema = object({
     .min(1, 'At least one label is required')
     .required(),
   date: date().required('Date is required'),
+  status: string().required('Status is required item.'),
 });

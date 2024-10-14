@@ -1,17 +1,17 @@
 import { LoadingType, TaskViewType } from './components.types';
 
-export type PopoverType<T> = {
-  label: string;
-  value: T;
+// Status for Task
+export type COLUMN_TASK_STATUS = {
+  BACKLOG: 'Backlog';
+  TODO: 'Todo';
+  IN_PROGRESS: 'In progress';
+  DONE: 'Done';
+  CANCELLED: 'Cancelled';
 };
 
-// Status for Task
-export type TaskStatus =
-  | 'BACKLOG'
-  | 'CANCELLED'
-  | 'DONE'
-  | 'IN_PROGRESS'
-  | 'TODO';
+export type ColumnTaskStatusKeys = keyof COLUMN_TASK_STATUS;
+
+export type ColumnTaskStatusValues = COLUMN_TASK_STATUS[ColumnTaskStatusKeys];
 
 // Estimate point for a task
 export type TaskPointEstimate = 'EIGHT' | 'FOUR' | 'ONE' | 'TWO' | 'ZERO';
@@ -41,10 +41,24 @@ export interface ITask {
   name: string;
   pointEstimate: PopoverType<TaskPointEstimate> | null;
   position: number;
-  status: TaskStatus;
+  status: ColumnTaskStatusKeys;
   tags: TaskTag[];
   date: Date;
 }
+
+export interface ICreateTaskInput {
+  assigneeId: string;
+  dueDate: Date;
+  name: string;
+  pointEstimate: TaskPointEstimate;
+  status: ColumnTaskStatusKeys;
+  tags: TaskTag[];
+}
+
+export type PopoverType<V, K = string> = {
+  label: K;
+  value: V;
+};
 
 export interface ModuleItem {
   id: string;
@@ -59,36 +73,18 @@ export interface TaskState {
   viewType: TaskViewType;
   searchQuery: string;
   task: ITask | null;
-  taskStatusSections: ITaskStatusSections[] | null;
+  columnTaskStatus: ITaskStatusSections[] | null;
   isTaskModalOpen: boolean;
   isTaskUpdate: boolean;
   // Tmp use for updating task
   taskSectionIdSelected: string;
   // query keys
+  profile: IUser | null;
   users: IUser[] | null;
 }
 
-export interface ITaskEstimate {
-  id: string;
-  value: string;
-  label: string;
-  icon: JSX.Element;
-}
-
-export interface ITaskAssignee {
-  id: string;
-  name: string;
-  profileUrl: string;
-}
-
-export interface ITaskLabel {
-  id: string;
-  value: string;
-  label: string;
-}
-
 export interface ITaskStatusSections {
-  id: string;
-  title: string;
+  id: ColumnTaskStatusKeys;
+  title: ColumnTaskStatusValues;
   tasks: ITask[] | null;
 }

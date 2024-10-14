@@ -13,6 +13,7 @@ import { Popover } from '@components/molecules';
 
 import AssigneeList from './components/AssigneeList';
 import EstimateList from './components/EstimateList';
+import StatusList from './components/StatusList';
 import LabelList from './components/LabelList';
 
 import { formatDate } from '@utils/date-format';
@@ -133,6 +134,16 @@ const CalendarButton = () => {
   );
 };
 
+const TaskStatusButton = () => {
+  const { task, onStoreTask } = useTask();
+  const { status } = task ?? {};
+  return (
+    <Popover contentTitle="Status" buttonTitle={status ?? 'Status'}>
+      <StatusList onSelect={onStoreTask} />
+    </Popover>
+  );
+};
+
 const Footer = ({ onClose }: Pick<TaskDialogProps, 'onClose'>) => {
   const { isTaskValid, isTaskUpdate, handleSubmitTask } = useTask();
 
@@ -160,6 +171,7 @@ TaskDialog.EstimateButton = EstimateButton;
 TaskDialog.AssigneeButton = AssigneeButton;
 TaskDialog.LabelButton = LabelButton;
 TaskDialog.CalendarButton = CalendarButton;
+TaskDialog.TaskStatusButton = TaskStatusButton;
 TaskDialog.Footer = Footer;
 
 export default TaskDialog;

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ITask, IUser, TaskState } from '@interfaces/app';
 
-import { STATUS_SECTIONS_LIST } from '@mocks/task';
+import { COLUMN_TASK_STATUS } from '@mocks/task';
 
 const initialState = {
   loading: 'idle',
@@ -11,12 +11,13 @@ const initialState = {
   viewType: 'BOARD',
   searchQuery: '',
   task: null,
-  taskStatusSections: STATUS_SECTIONS_LIST, // Dummy data tmp
   isTaskModalOpen: false,
   isTaskUpdate: false,
   // Section selected is use tmp to achieve task updating
   taskSectionIdSelected: '',
+  columnTaskStatus: COLUMN_TASK_STATUS, // Dummy data tmp
   // query keys
+  profile: null,
   users: null,
 } satisfies TaskState as TaskState;
 
@@ -24,10 +25,15 @@ const appSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
+    setProfile: (state, { payload }: PayloadAction<IUser>) => {
+      if (!payload) return;
+
+      state.profile = payload;
+    },
     setUsers: (state, { payload }: PayloadAction<IUser[]>) => {
-      if (Array.isArray(payload)) {
-        state.users = payload;
-      }
+      if (!Array.isArray(payload)) return;
+
+      state.users = payload;
     },
     setTaskSectionIdSelected: (state, { payload }) => {
       state.taskSectionIdSelected = payload;
@@ -91,7 +97,7 @@ const appSlice = createSlice({
       state.task = { ...task, ...payloadUpdated };
     },
     setTaskSections: (state, { payload }) => {
-      state.taskStatusSections = payload;
+      state.columnTaskStatus = payload;
     },
     onToggleTaskModal: (state) => {
       state.isTaskModalOpen = !state.isTaskModalOpen;
@@ -102,12 +108,12 @@ const appSlice = createSlice({
     onClearTask: (state) => {
       state.task = null;
     },
-    addTaskToSection: (
+    addTask: (
       state,
       { payload }: PayloadAction<{ sectionId: string; task: ITask }>,
     ) => {
-      if (state.taskStatusSections) {
-        const section = state.taskStatusSections?.find(
+      if (state.columnTaskStatus) {
+        const section = state.columnTaskStatus?.find(
           (section) => section.id === payload.sectionId,
         );
         if (section) {
@@ -125,13 +131,13 @@ const appSlice = createSlice({
         taskUpdated?: ITask;
       }>,
     ) => {
-      if (state.taskStatusSections) {
-        const sectionIndex = state.taskStatusSections.findIndex(
+      if (state.columnTaskStatus) {
+        const sectionIndex = state.columnTaskStatus.findIndex(
           (section) => section.id === payload.sectionId,
         );
 
         if (sectionIndex !== -1) {
-          const section = state.taskStatusSections[sectionIndex];
+          const section = state.columnTaskStatus[sectionIndex];
 
           const taskSelected = section.tasks?.find(
             (task: ITask) => task.id === payload.taskId,
@@ -149,7 +155,7 @@ const appSlice = createSlice({
               return task;
             });
 
-            state.taskStatusSections[sectionIndex] = { ...section };
+            state.columnTaskStatus[sectionIndex] = { ...section };
           }
         }
       }
@@ -158,12 +164,12 @@ const appSlice = createSlice({
       state,
       { payload }: PayloadAction<{ sectionId: string; taskId: string }>,
     ) => {
-      if (state.taskStatusSections) {
-        const sectionIndex = state.taskStatusSections.findIndex(
+      if (state.columnTaskStatus) {
+        const sectionIndex = state.columnTaskStatus.findIndex(
           (section) => section.id === payload.sectionId,
         );
         if (sectionIndex !== -1) {
-          const section = state.taskStatusSections[sectionIndex];
+          const section = state.columnTaskStatus[sectionIndex];
 
           section.tasks = section.tasks ?? [];
 
@@ -171,7 +177,7 @@ const appSlice = createSlice({
             (task: ITask) => task.id !== payload.taskId,
           );
 
-          state.taskStatusSections[sectionIndex] = { ...section };
+          state.columnTaskStatus[sectionIndex] = { ...section };
         }
       }
     },
@@ -185,7 +191,7 @@ export const {
   onDeleteTask,
   onToggleTaskModal,
   onToggleTaskUpdate,
-  addTaskToSection,
+  addTask,
   setTaskSectionIdSelected,
   setTaskErrorMessage,
   setTaskSections,
@@ -193,6 +199,7 @@ export const {
   setSearchQuery,
   setTask,
   // query actions
+  setProfile,
   setUsers,
 } = appSlice.actions;
 

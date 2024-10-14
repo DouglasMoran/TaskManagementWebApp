@@ -1,13 +1,11 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
-import { useQuery } from '@apollo/client';
-import { v4 as uuidv4 } from 'uuid';
+import { useMutation, useQuery } from '@apollo/client';
 
 import { MainState, useAppDispatch } from '@store/index';
 
 import {
-  addTaskToSection,
   onClearTask,
   onDeleteTask,
   onUpdateTask,
@@ -18,12 +16,11 @@ import {
 } from '@store/slices/task/taskSlice';
 
 import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
+import { CREATE_TASK } from '@services/graphql/mutations/task';
 
 import { validationTaskSchema } from '@utils/validations';
 
-import { STATUS_COLUMN_ID } from '@constants/app';
-
-import { ITask } from '@interfaces/app';
+import { ICreateTaskInput, ITask } from '@interfaces/app';
 
 type TaskActionProps = {
   sectionId: string;
@@ -34,6 +31,10 @@ type TaskActionProps = {
 const useTask = () => {
   const dispatch = useAppDispatch();
 
+  const [
+    createTask,
+    { loading: isLoadingCreation, error: errorCreation, data: dataCreation },
+  ] = useMutation(CREATE_TASK);
   const { loading: isLoading, error, data } = useQuery(GET_ALL_TASK);
 
   const { task, isTaskModalOpen, isTaskUpdate, taskSectionIdSelected } =
@@ -64,6 +65,29 @@ const useTask = () => {
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ name: value });
 
+  const handleCreateTask = async () => {
+    if (!task) return;
+
+    try {
+      const taskInput: ICreateTaskInput = {
+        assigneeId: task.assignee?.id ?? '',
+        dueDate: task.date,
+        tags: task.tags,
+        name: task.name,
+        pointEstimate: task.pointEstimate?.value ?? 'ZERO',
+        status: task.status,
+      };
+
+      await createTask({
+        variables: {
+          input: taskInput,
+        },
+      });
+    } catch (error) {
+      console.log('ERROR ::: CREATE TASK ::: ', error);
+    }
+  };
+
   const handleSubmitTask = async () => {
     if (task) {
       if (isTaskUpdate) {
@@ -74,15 +98,7 @@ const useTask = () => {
         });
         dispatch(setTaskSectionIdSelected(null));
       } else {
-        dispatch(
-          addTaskToSection({
-            sectionId: STATUS_COLUMN_ID.WORKING,
-            task: {
-              ...task,
-              id: uuidv4(),
-            },
-          }),
-        );
+        await handleCreateTask();
         onToggleModal();
       }
 
@@ -91,6 +107,9 @@ const useTask = () => {
   };
 
   return {
+    isLoadingCreation,
+    errorCreation,
+    dataCreation,
     isTaskModalOpen,
     isTaskUpdate,
     isTaskValid,
