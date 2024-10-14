@@ -1,39 +1,39 @@
-import Avatar from '@components/atoms/Avatar';
-import { ITask, ITaskAssignee } from '@interfaces/app';
-
-import { ASSIGNEE_LIST } from '@mocks/task';
 import { useCallback } from 'react';
 
+import Avatar from '@components/atoms/Avatar';
+
+import { ITask, IUser } from '@interfaces/app';
+
+import useUsers from '@hooks/useUsers';
+
 type EstimateListProps = {
-  data?: ITaskAssignee[];
   onSelect: (task: Partial<ITask>) => void;
 };
 
-const AssigneeList = ({
-  data = ASSIGNEE_LIST,
-  onSelect,
-}: EstimateListProps) => {
+const AssigneeList = ({ onSelect }: EstimateListProps) => {
+  const { users } = useUsers();
+
   const handleSelectMember = useCallback(
-    (member: ITaskAssignee) => {
-      if (member) {
-        onSelect({ member });
+    (user: IUser) => {
+      if (user) {
+        onSelect({ assignee: user });
       }
     },
     [onSelect],
   );
 
   return (
-    <div className="mt-2 flex flex-col gap-2 pt-72">
-      {data.map((item: ITaskAssignee) => {
-        const { id, name, profileUrl } = item ?? {};
+    <div className="mt-2 flex flex-col gap-2 pt-4">
+      {users?.map((item: IUser) => {
+        const { id, fullName, avatar } = item ?? {};
         return (
           <div
             key={id}
             onClick={() => handleSelectMember(item)}
-            className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2"
+            className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2 items-center justify-start"
           >
-            <Avatar url={profileUrl} />
-            <p>{name}</p>
+            <Avatar url={avatar ?? ''} />
+            <p>{fullName}</p>
           </div>
         );
       })}

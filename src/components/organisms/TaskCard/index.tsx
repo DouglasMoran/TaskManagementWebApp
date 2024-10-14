@@ -8,11 +8,11 @@ import { PiTrashLight } from 'react-icons/pi';
 import { TaskActionButtons, Popover } from '@components/molecules';
 import { Avatar, Badge } from '@components/atoms';
 
-import { ITask, ITaskLabel } from '@interfaces/app';
+import { ITask, TaskTag } from '@interfaces/app';
 
 import { formatDate } from '@utils/date-format';
 
-import { LABEL_LIST } from '@mocks/task';
+import { TASK_TAGS } from '@mocks/task';
 
 import useTask from '@hooks/useTask';
 
@@ -90,18 +90,16 @@ TaskCard.Content = ({
       />
     </div>
     <div className="my-4 flex flex-row gap-2 2xl:mt-8">
-      {labels?.map(({ label, id }: ITaskLabel) => {
+      {labels?.map((tag: TaskTag) => {
         return (
           <Badge
-            key={id}
-            title={label}
+            key={tag}
+            title={tag}
             textClass={'lg:text-[10px] 2xl:text-lg font-sf '.concat(
-              label === LABEL_LIST[0].label
-                ? 'text-secondary-4'
-                : 'text-tertiary-4',
+              tag === TASK_TAGS[0] ? 'text-secondary-4' : 'text-tertiary-4',
             )}
             containerClass={
-              label === LABEL_LIST[0].label
+              tag === TASK_TAGS[0]
                 ? '!bg-secondary-5 !text-secondary-4 lg:p-2 2xl:p-4'
                 : '!bg-tertiary-5  lg:p-2 2xl:p-4'
             }

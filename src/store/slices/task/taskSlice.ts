@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ITask, TaskState } from '@interfaces/app';
+import { ITask, IUser, TaskState } from '@interfaces/app';
 
 import { STATUS_SECTIONS_LIST } from '@mocks/task';
 
@@ -16,12 +16,19 @@ const initialState = {
   isTaskUpdate: false,
   // Section selected is use tmp to achieve task updating
   taskSectionIdSelected: '',
+  // query keys
+  users: null,
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
+    setUsers: (state, { payload }: PayloadAction<IUser[]>) => {
+      if (Array.isArray(payload)) {
+        state.users = payload;
+      }
+    },
     setTaskSectionIdSelected: (state, { payload }) => {
       state.taskSectionIdSelected = payload;
     },
@@ -34,48 +41,49 @@ const appSlice = createSlice({
     setSearchQuery: (state, { payload }) => {
       state.searchQuery = payload;
     },
-    setTask: (state, { payload }) => {
+    setTask: (state, { payload }: PayloadAction<Partial<ITask>>) => {
       const { task } = state;
 
       let payloadUpdated = { ...payload };
 
       // If the same estimate point is selected will be setting to null again
-      if (payloadUpdated?.points?.id) {
-        const isSamePoint = task?.points?.id === payload.points.id;
-        payloadUpdated.points = isSamePoint ? null : payload.points;
+      if (payloadUpdated?.pointEstimate?.value) {
+        const isSamePoint =
+          task?.pointEstimate?.value === payload.pointEstimate?.value;
+        payloadUpdated.pointEstimate = isSamePoint
+          ? null
+          : payload.pointEstimate;
       }
 
       // If the same member is selected will be setting to null again
-      if (payloadUpdated?.member?.id) {
-        const isSamePoint = task?.member?.id === payload.member.id;
-        payloadUpdated.member = isSamePoint ? null : payload.member;
+      if (payloadUpdated?.assignee?.id) {
+        const isSameAssignee = task?.assignee?.id === payload.assignee?.id;
+        payloadUpdated.assignee = isSameAssignee ? null : payload.assignee;
       }
 
-      // Logic for select multiple labels
-      if (Array.isArray(payloadUpdated?.labels)) {
-        const newItem = payloadUpdated.labels[0];
+      // Logic for select multiple tags
+      if (Array.isArray(payloadUpdated?.tags)) {
+        const newTagSelected = payloadUpdated.tags[0];
 
-        const prevLabelsSelectedId = Array.isArray(task?.labels)
-          ? task?.labels?.map((item) => item.id)
-          : [];
+        const prevTagsSelected = Array.isArray(task?.tags) ? task?.tags : [];
 
-        // Add the first label
-        if (!prevLabelsSelectedId?.includes(newItem.id)) {
-          payloadUpdated.labels = [newItem];
+        // Add the first tag
+        if (!prevTagsSelected?.includes(newTagSelected)) {
+          payloadUpdated.tags = [newTagSelected];
         }
 
-        // Add multiple labels
+        // Add multiple tags
         if (
-          Array.isArray(task?.labels) &&
-          !prevLabelsSelectedId?.includes(newItem.id)
+          Array.isArray(task?.tags) &&
+          !prevTagsSelected?.includes(newTagSelected)
         ) {
-          payloadUpdated.labels = task.labels.concat(newItem);
+          payloadUpdated.tags = task.tags.concat(newTagSelected);
         }
 
-        // Remove the label if was prev selected
-        if (prevLabelsSelectedId?.includes(newItem.id)) {
-          payloadUpdated.labels = task?.labels.filter(
-            (item) => item.id !== newItem.id,
+        // Remove the tag if was prev selected
+        if (prevTagsSelected?.includes(newTagSelected)) {
+          payloadUpdated.tags = task?.tags.filter(
+            (item) => item !== newTagSelected,
           );
         }
       }
@@ -184,6 +192,8 @@ export const {
   setTaskViewType,
   setSearchQuery,
   setTask,
+  // query actions
+  setUsers,
 } = appSlice.actions;
 
 export default appSlice.reducer;

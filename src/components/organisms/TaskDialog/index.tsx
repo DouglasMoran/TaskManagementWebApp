@@ -7,14 +7,17 @@ import { RiPriceTag3Fill } from 'react-icons/ri';
 import { FaCarBattery } from 'react-icons/fa';
 import { FaUser } from 'react-icons/fa6';
 
-import { Calendar, Button, Avatar } from '@components/atoms';
+import Calendar from '@components/atoms/Calendar';
+import { Button, Avatar } from '@components/atoms';
 import { Popover } from '@components/molecules';
 
-import { EstimateList, AssigneeList, LabelList } from './components';
+import AssigneeList from './components/AssigneeList';
+import EstimateList from './components/EstimateList';
+import LabelList from './components/LabelList';
 
 import { formatDate } from '@utils/date-format';
 
-import { ITaskLabel } from '@interfaces/app';
+import { TaskTag } from '@interfaces/app';
 
 import useTask from '@hooks/useTask';
 
@@ -31,7 +34,7 @@ const TaskDialog = ({ isOpen, onClose, children }: TaskDialogProps) => {
         <DialogPanel className="w-5/12 space-y-4 rounded-lg bg-neutral-3 p-6 md:w-10/12 lg:w-7/12 xl:w-6/12 2xl:w-5/12">
           <input
             placeholder="Task title"
-            value={task?.title ?? ''}
+            value={task?.name ?? ''}
             maxLength={40}
             onChange={onChangeTaskTitle}
             className="flex w-full flex-1 bg-transparent px-4 py-3 text-2xl text-neutral-1 placeholder:text-neutral-2 focus:outline-none focus:ring-transparent"
@@ -48,11 +51,11 @@ const TaskDialog = ({ isOpen, onClose, children }: TaskDialogProps) => {
 
 const EstimateButton = () => {
   const { task, onStoreTask } = useTask();
-  const { points } = task ?? {};
+  const { pointEstimate } = task ?? {};
   return (
     <Popover
       contentTitle="Estimate"
-      buttonTitle={points ? points.label : 'Estimate'}
+      buttonTitle={pointEstimate?.label ?? 'Estimate'}
       buttonIcon={<FaCarBattery className="h-6 w-6 text-neutral-1" />}
     >
       <EstimateList onSelect={onStoreTask} />
@@ -62,14 +65,14 @@ const EstimateButton = () => {
 
 const AssigneeButton = () => {
   const { task, onStoreTask } = useTask();
-  const { member } = task ?? {};
+  const { assignee } = task ?? {};
   return (
     <Popover
       contentTitle="Assignee"
-      buttonTitle={member ? member.name : 'Assignee'}
+      buttonTitle={assignee ? assignee.fullName : 'Assignee'}
       buttonIcon={
-        member ? (
-          <Avatar url={member.profileUrl} classContainer="!h-8 !w-8" />
+        assignee?.avatar ? (
+          <Avatar url={assignee.avatar} classContainer="!h-8 !w-8" />
         ) : (
           <FaUser className="h-6 w-6 text-neutral-1" />
         )
@@ -84,13 +87,11 @@ const AssigneeButton = () => {
 const LabelButton = () => {
   const { task, onStoreTask } = useTask();
 
-  const { labels } = task ?? {};
+  const { tags } = task ?? {};
 
   return (
     <>
-      {[!labels, Array.isArray(labels) && labels.length === 0].includes(
-        true,
-      ) && (
+      {[!tags, Array.isArray(tags) && tags.length === 0].includes(true) && (
         <Popover
           buttonTitle="Label"
           contentTitle="Label"
@@ -99,11 +100,11 @@ const LabelButton = () => {
           <LabelList onSelect={onStoreTask} />
         </Popover>
       )}
-      {Array.isArray(labels) &&
-        labels.map(({ label, id }: ITaskLabel) => {
+      {Array.isArray(tags) &&
+        tags.map((tag: TaskTag) => {
           return (
-            <div key={id} className="flex flex-row">
-              <Popover buttonTitle={label} contentTitle="Label">
+            <div key={tag} className="flex flex-row">
+              <Popover buttonTitle={tag} contentTitle="Label">
                 <LabelList onSelect={onStoreTask} />
               </Popover>
             </div>

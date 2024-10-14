@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
+import { useQuery } from '@apollo/client';
 import { v4 as uuidv4 } from 'uuid';
 
 import { MainState, useAppDispatch } from '@store/index';
@@ -16,10 +17,13 @@ import {
   setTaskSectionIdSelected,
 } from '@store/slices/task/taskSlice';
 
-import { ITask } from '@interfaces/app';
+import { GET_ALL_TASK } from '@services/graphql/queries/tasks';
+
 import { validationTaskSchema } from '@utils/validations';
 
 import { STATUS_COLUMN_ID } from '@constants/app';
+
+import { ITask } from '@interfaces/app';
 
 type TaskActionProps = {
   sectionId: string;
@@ -29,6 +33,8 @@ type TaskActionProps = {
 
 const useTask = () => {
   const dispatch = useAppDispatch();
+
+  const { loading: isLoading, error, data } = useQuery(GET_ALL_TASK);
 
   const { task, isTaskModalOpen, isTaskUpdate, taskSectionIdSelected } =
     useSelector((state: MainState) => state.task);
@@ -56,7 +62,7 @@ const useTask = () => {
 
   const onChangeTaskTitle = ({
     target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ title: value });
+  }: React.ChangeEvent<HTMLInputElement>) => onStoreTask({ name: value });
 
   const handleSubmitTask = async () => {
     if (task) {
@@ -88,6 +94,9 @@ const useTask = () => {
     isTaskModalOpen,
     isTaskUpdate,
     isTaskValid,
+    isLoading,
+    error,
+    data,
     task,
     onToggleModal,
     onChangeTaskTitle,

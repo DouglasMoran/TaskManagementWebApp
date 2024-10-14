@@ -4,50 +4,47 @@ import { Checkbox } from '@headlessui/react';
 
 import { BsCheck } from 'react-icons/bs';
 
-import { ITask, ITaskLabel } from '@interfaces/app';
+import { ITask, TaskTag } from '@interfaces/app';
 
 import { MainState } from '@store/index';
 
-import { LABEL_LIST } from '@mocks/task';
+import { TASK_TAGS } from '@mocks/task';
 
 type LabelListtProps = {
-  data?: ITaskLabel[];
+  data?: TaskTag[];
   onSelect: (task: Partial<ITask>) => void;
 };
 
-const LabelList = ({ data = LABEL_LIST, onSelect }: LabelListtProps) => {
+const LabelList = ({ data = TASK_TAGS, onSelect }: LabelListtProps) => {
   const { task } = useSelector((state: MainState) => state.task);
 
-  const prevLabelsSelectedId = Array.isArray(task?.labels)
-    ? task?.labels.map((item) => item.id)
+  const prevLabelsSelectedId = Array.isArray(task?.tags)
+    ? task?.tags.map((item) => item)
     : [];
 
   // Label Item is wrapped like array because the logic is controlle on the store
-  const handleSelectLabel = (labelItem: ITaskLabel) =>
-    onSelect({ labels: [labelItem] });
+  const handleSelectLabel = (tag: TaskTag) => onSelect({ tags: [tag] });
 
   return (
     <div className="mt-2 flex flex-col gap-2">
-      {data.map((item: ITaskLabel) => {
-        const { id, value, label } = item ?? {};
-
+      {data.map((tag: TaskTag) => {
         const isLabelChecked =
-          prevLabelsSelectedId.length > 0 && prevLabelsSelectedId.includes(id);
+          prevLabelsSelectedId.length > 0 && prevLabelsSelectedId.includes(tag);
 
         return (
           <div
-            key={id}
+            key={tag}
             className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-6"
           >
             <Checkbox
               checked={isLabelChecked}
-              onChange={() => handleSelectLabel(item)}
-              value={value}
+              onChange={() => handleSelectLabel(tag)}
+              value={tag}
               className="group size-6 rounded-sm bg-white/10 p-1 ring-1 ring-inset ring-white/15 hover:border hover:border-neutral-1 data-[checked]:bg-white"
             >
               {isLabelChecked && <BsCheck className="text-neutral-4" />}
             </Checkbox>
-            <p>{label}</p>
+            <p>{tag}</p>
           </div>
         );
       })}
