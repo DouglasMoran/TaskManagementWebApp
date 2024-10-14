@@ -91,7 +91,6 @@ const useTask = () => {
       console.log('::: ERROR :::: DELETING TASK ::: ', error);
     } finally {
       allowRefreshTask();
-      window.location.reload();
     }
   };
 
@@ -121,7 +120,6 @@ const useTask = () => {
       console.log('::: ERROR :::: CREATE TASK ::: ', error);
     } finally {
       allowRefreshTask();
-      window.location.reload();
     }
   };
 
@@ -152,7 +150,6 @@ const useTask = () => {
       console.log('::: ERROR :::: UPDATE TASK ::: ', error);
     } finally {
       allowRefreshTask();
-      window.location.reload();
     }
   };
 
@@ -169,15 +166,13 @@ const useTask = () => {
   };
 
   useEffect(() => {
-    console.log('allowRefreshTasks :::: CURRENT STATE ::: ', allowRefreshTasks);
     if (allowRefreshTasks) {
-      getTasks().then((event) => {
-        if (event.data?.tasks) {
-          dispatch(filterTasksByStatus(event.data.tasks));
-        }
-      });
+      getTasks();
+      if (data) {
+        dispatch(filterTasksByStatus(data.tasks));
+      }
     }
-  }, [allowRefreshTasks, dispatch]);
+  }, [allowRefreshTasks, getTasks, dispatch, data]);
 
   return {
     isLoadingUpdating,

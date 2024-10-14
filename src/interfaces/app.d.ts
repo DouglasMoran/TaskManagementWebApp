@@ -1,4 +1,4 @@
-import { LoadingType, TaskViewType } from './components.types';
+import { TaskViewType } from './components.types';
 
 // Status for Task
 export type COLUMN_TASK_STATUS = {
