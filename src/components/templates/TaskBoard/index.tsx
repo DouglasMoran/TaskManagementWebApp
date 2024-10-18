@@ -17,13 +17,14 @@ type TaskBoardProps = {
 };
 
 const TaskBoard = ({ classDroppableContainer }: TaskBoardProps) => {
-  const { sensors, columns, handleDragEnd } = useDnd();
+  const { sensors, columns, handleDragEnd, onPreventRefreshTasks } = useDnd();
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
+      onDragStart={onPreventRefreshTasks}
     >
       <div className="flex h-screen space-x-4 overflow-x-auto">
         {columns?.map((section) => (
@@ -39,16 +40,16 @@ const TaskBoard = ({ classDroppableContainer }: TaskBoardProps) => {
               strategy={verticalListSortingStrategy}
             >
               {section.tasks?.map(
-                ({ id, title, member, ...restTaskData }, index) => (
+                ({ id, name, assignee, tags, date, pointEstimate }, index) => (
                   <SortableItem key={id} id={id} index={index}>
                     <TaskCard>
-                      <TaskCard.Header
-                        title={title}
-                        sectionId={section.id}
-                        taskId={id}
+                      <TaskCard.Header title={name} taskId={id} />
+                      <TaskCard.Content
+                        tags={tags}
+                        dueDate={date}
+                        pointEstimate={pointEstimate}
                       />
-                      <TaskCard.Content {...restTaskData} />
-                      <TaskCard.Footer member={member} />
+                      <TaskCard.Footer assignee={assignee} />
                     </TaskCard>
                   </SortableItem>
                 ),

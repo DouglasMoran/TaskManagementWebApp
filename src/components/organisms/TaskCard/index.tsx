@@ -5,14 +5,21 @@ import { CgAlarm } from 'react-icons/cg';
 import { RiPencilLine } from 'react-icons/ri';
 import { PiTrashLight } from 'react-icons/pi';
 
-import { TaskActionButtons, Popover } from '@components/molecules';
-import { Avatar, Badge } from '@components/atoms';
+import TaskActionButtons from '@components/molecules/TaskActionButtons';
+import Popover from '@components/molecules/Popover';
+import Avatar from '@components/atoms/Avatar';
+import Badge from '@components/atoms/Badge';
 
-import { ITask, ITaskLabel } from '@interfaces/app';
+import {
+  ITask,
+  PopoverType,
+  TaskPointEstimate,
+  TaskTag,
+} from '@interfaces/app';
 
 import { formatDate } from '@utils/date-format';
 
-import { LABEL_LIST } from '@mocks/task';
+import { TASK_POINT_ESTIMATES, TASK_TAGS } from '@mocks/task';
 
 import useTask from '@hooks/useTask';
 
@@ -21,9 +28,14 @@ type TaskCardProps = {
 };
 
 type TaskHeaderProps = {
-  title: ITask['title'];
-  sectionId: string;
+  title: ITask['name'];
   taskId: string;
+};
+
+type ContentProps = {
+  dueDate: ITask['dueDate'];
+  tags: ITask['tags'];
+  pointEstimate: PopoverType<TaskPointEstimate> | TaskPointEstimate | null;
 };
 
 const TaskCard = ({ children }: TaskCardProps) => {
@@ -34,7 +46,7 @@ const TaskCard = ({ children }: TaskCardProps) => {
   );
 };
 
-const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
+const Header = ({ title, taskId }: TaskHeaderProps) => {
   const { onUpdate, onDelete } = useTask();
 
   return (
@@ -56,13 +68,13 @@ const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
             title="Edit"
             icon={<RiPencilLine className="h-5 w-5 text-neutral-1" />}
             containerClass="text-base text-neutral-1 font-normal font-sf justify-start gap-4 bg-neutral-6 hover:bg-neutral-2"
-            onClick={() => onUpdate({ ...metadataActions })}
+            onClick={() => onUpdate(taskId)}
           />
           <Badge
             title="Delete"
             icon={<PiTrashLight className="h-5 w-5 text-neutral-1" />}
             containerClass="text-base text-neutral-1 font-normal font-sf justify-between bg-neutral-6 hover:bg-neutral-2"
-            onClick={() => onDelete({ ...metadataActions })}
+            onClick={() => onDelete(taskId)}
           />
         </div>
       </Popover>
@@ -71,51 +83,55 @@ const Header = ({ title, ...metadataActions }: TaskHeaderProps) => {
 };
 
 TaskCard.Content = ({
-  points,
-  labels,
-  date,
-}: Pick<ITask, 'points' | 'date' | 'labels'>) => (
-  <div className=" flex-grow">
-    <div className="flex flex-row items-center justify-between 2xl:mt-8">
-      <p className="font-sf text-base font-semibold text-neutral-1 lg:text-sm 2xl:text-lg">
-        {points.label}
-      </p>
-      <Badge
-        title={formatDate(date)}
-        icon={
-          <CgAlarm className="h-6 w-6 text-neutral-1 lg:h-4 lg:w-4 2xl:h-6 2xl:w-6" />
-        }
-        containerClass="text-neutral-1 !p-2"
-        textClass="lg:text-xs 2xl:text-lg font-sf flex"
-      />
-    </div>
-    <div className="my-4 flex flex-row gap-2 2xl:mt-8">
-      {labels?.map(({ label, id }: ITaskLabel) => {
-        return (
-          <Badge
-            key={id}
-            title={label}
-            textClass={'lg:text-[10px] 2xl:text-lg font-sf '.concat(
-              label === LABEL_LIST[0].label
-                ? 'text-secondary-4'
-                : 'text-tertiary-4',
-            )}
-            containerClass={
-              label === LABEL_LIST[0].label
-                ? '!bg-secondary-5 !text-secondary-4 lg:p-2 2xl:p-4'
-                : '!bg-tertiary-5  lg:p-2 2xl:p-4'
-            }
-          />
-        );
-      })}
-    </div>
-  </div>
-);
+  pointEstimate = 'ZERO',
+  tags,
+  dueDate,
+}: ContentProps) => {
+  const pointSelected = TASK_POINT_ESTIMATES.find(
+    (p) => p.value === pointEstimate,
+  );
 
-TaskCard.Footer = ({ member: { profileUrl } }: Pick<ITask, 'member'>) => (
+  return (
+    <div className=" flex-grow">
+      <div className="flex flex-row items-center justify-between 2xl:mt-8">
+        <p className="font-sf text-base font-semibold text-neutral-1 lg:text-sm 2xl:text-lg">
+          {pointSelected?.label}
+        </p>
+        <Badge
+          title={formatDate(dueDate)}
+          icon={
+            <CgAlarm className="h-6 w-6 text-neutral-1 lg:h-4 lg:w-4 2xl:h-6 2xl:w-6" />
+          }
+          containerClass="text-neutral-1 !p-2"
+          textClass="lg:text-xs 2xl:text-lg font-sf flex"
+        />
+      </div>
+      <div className="my-4 flex flex-row gap-2 2xl:mt-8">
+        {tags?.map((tag: TaskTag) => {
+          return (
+            <Badge
+              key={tag}
+              title={tag}
+              textClass={'lg:text-[10px] 2xl:text-lg font-sf '.concat(
+                tag === TASK_TAGS[0] ? 'text-secondary-4' : 'text-tertiary-4',
+              )}
+              containerClass={
+                tag === TASK_TAGS[0]
+                  ? '!bg-secondary-5 !text-secondary-4 lg:p-2 2xl:p-4'
+                  : '!bg-tertiary-5  lg:p-2 2xl:p-4'
+              }
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+TaskCard.Footer = ({ assignee }: Pick<ITask, 'assignee'>) => (
   <div className="flex h-1/3 w-full flex-row items-end justify-between">
     <Avatar
-      url={profileUrl}
+      url={assignee?.avatar ?? ''}
       classContainer="!h-8 !w-8 lg:h-6 lg:w-6 2xl:h-12 2xl:w-12 overflow-hidden"
     />
     <TaskActionButtons />

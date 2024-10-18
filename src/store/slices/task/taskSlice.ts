@@ -1,32 +1,41 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ITask, TaskState } from '@interfaces/app';
+import { ITask, ITaskStatusSections, IUser, TaskState } from '@interfaces/app';
 
-import { STATUS_SECTIONS_LIST } from '@mocks/task';
+import { COLUMN_TASK_STATUS } from '@mocks/task';
 
 const initialState = {
-  loading: 'idle',
-  errorMessage: '',
-  data: null,
   viewType: 'BOARD',
   searchQuery: '',
-  task: null,
-  taskStatusSections: STATUS_SECTIONS_LIST, // Dummy data tmp
   isTaskModalOpen: false,
   isTaskUpdate: false,
-  // Section selected is use tmp to achieve task updating
-  taskSectionIdSelected: '',
+  allowRefreshTasks: true,
+  columnTaskStatus: COLUMN_TASK_STATUS, // mock initial column state
+  // query keys
+  profile: null,
+  users: null,
+  task: null,
 } satisfies TaskState as TaskState;
 
 const appSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    setTaskSectionIdSelected: (state, { payload }) => {
-      state.taskSectionIdSelected = payload;
+    setProfile: (state, { payload }: PayloadAction<IUser>) => {
+      if (!payload) return;
+
+      state.profile = payload;
     },
-    setTaskErrorMessage: (state, { payload }) => {
-      state.errorMessage = payload;
+    setUsers: (state, { payload }: PayloadAction<IUser[]>) => {
+      if (!Array.isArray(payload)) return;
+
+      state.users = payload;
+    },
+    setPreventRefreshTasks: (state) => {
+      state.allowRefreshTasks = false;
+    },
+    enableRefreshTasks: (state) => {
+      state.allowRefreshTasks = true;
     },
     setTaskViewType: (state, { payload }) => {
       state.viewType = payload;
@@ -34,138 +43,106 @@ const appSlice = createSlice({
     setSearchQuery: (state, { payload }) => {
       state.searchQuery = payload;
     },
-    setTask: (state, { payload }) => {
+    setTask: (state, { payload }: PayloadAction<Partial<ITask>>) => {
       const { task } = state;
 
       let payloadUpdated = { ...payload };
 
       // If the same estimate point is selected will be setting to null again
-      if (payloadUpdated?.points?.id) {
-        const isSamePoint = task?.points?.id === payload.points.id;
-        payloadUpdated.points = isSamePoint ? null : payload.points;
+      if (payloadUpdated?.pointEstimate?.value) {
+        const isSamePoint =
+          task?.pointEstimate?.value === payload.pointEstimate?.value;
+        payloadUpdated.pointEstimate = isSamePoint
+          ? null
+          : payload.pointEstimate;
       }
 
       // If the same member is selected will be setting to null again
-      if (payloadUpdated?.member?.id) {
-        const isSamePoint = task?.member?.id === payload.member.id;
-        payloadUpdated.member = isSamePoint ? null : payload.member;
+      if (payloadUpdated?.assignee?.id) {
+        const isSameAssignee = task?.assignee?.id === payload.assignee?.id;
+        payloadUpdated.assignee = isSameAssignee ? null : payload.assignee;
       }
 
-      // Logic for select multiple labels
-      if (Array.isArray(payloadUpdated?.labels)) {
-        const newItem = payloadUpdated.labels[0];
+      // Logic for select multiple tags
+      if (Array.isArray(payloadUpdated?.tags)) {
+        const newTagSelected = payloadUpdated.tags[0];
 
-        const prevLabelsSelectedId = Array.isArray(task?.labels)
-          ? task?.labels?.map((item) => item.id)
-          : [];
+        const prevTagsSelected = Array.isArray(task?.tags) ? task?.tags : [];
 
-        // Add the first label
-        if (!prevLabelsSelectedId?.includes(newItem.id)) {
-          payloadUpdated.labels = [newItem];
+        // Add the first tag
+        if (!prevTagsSelected?.includes(newTagSelected)) {
+          payloadUpdated.tags = [newTagSelected];
         }
 
-        // Add multiple labels
+        // Add multiple tags
         if (
-          Array.isArray(task?.labels) &&
-          !prevLabelsSelectedId?.includes(newItem.id)
+          Array.isArray(task?.tags) &&
+          !prevTagsSelected?.includes(newTagSelected)
         ) {
-          payloadUpdated.labels = task.labels.concat(newItem);
+          payloadUpdated.tags = task.tags.concat(newTagSelected);
         }
 
-        // Remove the label if was prev selected
-        if (prevLabelsSelectedId?.includes(newItem.id)) {
-          payloadUpdated.labels = task?.labels.filter(
-            (item) => item.id !== newItem.id,
+        // Remove the tag if was prev selected
+        if (prevTagsSelected?.includes(newTagSelected)) {
+          payloadUpdated.tags = task?.tags.filter(
+            (item) => item !== newTagSelected,
           );
         }
       }
 
       state.task = { ...task, ...payloadUpdated };
     },
-    setTaskSections: (state, { payload }) => {
-      state.taskStatusSections = payload;
+    setTaskSections: (
+      state,
+      { payload }: PayloadAction<ITaskStatusSections[]>,
+    ) => {
+      state.columnTaskStatus = [...payload];
     },
     onToggleTaskModal: (state) => {
       state.isTaskModalOpen = !state.isTaskModalOpen;
-    },
-    onToggleTaskUpdate: (state) => {
-      state.isTaskUpdate = !state.isTaskUpdate;
+
+      // Switch to create task mode
+      if (!state.isTaskModalOpen) state.isTaskUpdate = false;
+      // Clear task when is not editing mode and modal is dismissed
+      if (!state.isTaskModalOpen && !state.isTaskUpdate) state.task = null;
+      // Clear task when is editing mode and modal is dismissed
+      if (!state.isTaskModalOpen && state.isTaskUpdate) state.task = null;
     },
     onClearTask: (state) => {
       state.task = null;
     },
-    addTaskToSection: (
-      state,
-      { payload }: PayloadAction<{ sectionId: string; task: ITask }>,
-    ) => {
-      if (state.taskStatusSections) {
-        const section = state.taskStatusSections?.find(
-          (section) => section.id === payload.sectionId,
-        );
-        if (section) {
-          section.tasks?.push(payload.task);
-        }
-      }
-    },
-    onUpdateTask: (
+    setTaskById: (
       state,
       {
         payload,
       }: PayloadAction<{
-        sectionId: string;
         taskId: string;
-        taskUpdated?: ITask;
       }>,
     ) => {
-      if (state.taskStatusSections) {
-        const sectionIndex = state.taskStatusSections.findIndex(
-          (section) => section.id === payload.sectionId,
-        );
+      // Switch to edit mode
+      state.isTaskUpdate = true;
 
-        if (sectionIndex !== -1) {
-          const section = state.taskStatusSections[sectionIndex];
-
-          const taskSelected = section.tasks?.find(
-            (task: ITask) => task.id === payload.taskId,
-          );
-
-          if (taskSelected) {
-            state.task = { ...taskSelected };
-
-            section.tasks = section.tasks ?? [];
-
-            section.tasks = section.tasks?.map((task: ITask) => {
-              if (task.id === payload.taskId && payload.taskUpdated) {
-                return { ...payload.taskUpdated };
-              }
-              return task;
-            });
-
-            state.taskStatusSections[sectionIndex] = { ...section };
+      state.columnTaskStatus.forEach((column: ITaskStatusSections) => {
+        column.tasks?.forEach((task: ITask) => {
+          if (task.id === payload.taskId) {
+            state.task = task;
           }
-        }
-      }
+        });
+      });
     },
-    onDeleteTask: (
-      state,
-      { payload }: PayloadAction<{ sectionId: string; taskId: string }>,
-    ) => {
-      if (state.taskStatusSections) {
-        const sectionIndex = state.taskStatusSections.findIndex(
-          (section) => section.id === payload.sectionId,
+    filterTasksByStatus: (state, { payload }: PayloadAction<ITask[]>) => {
+      state.columnTaskStatus.forEach((column) => {
+        column.tasks = [];
+      });
+
+      payload.forEach((task) => {
+        const column = state.columnTaskStatus.find(
+          (column) => column.id === task.status,
         );
-        if (sectionIndex !== -1) {
-          const section = state.taskStatusSections[sectionIndex];
-
-          section.tasks = section.tasks ?? [];
-
-          section.tasks = section.tasks?.filter(
-            (task: ITask) => task.id !== payload.taskId,
-          );
-
-          state.taskStatusSections[sectionIndex] = { ...section };
+        if (column) {
+          column.tasks?.push(task);
         }
-      }
+      });
     },
   },
   extraReducers: () => {},
@@ -173,17 +150,18 @@ const appSlice = createSlice({
 
 export const {
   onClearTask,
-  onUpdateTask,
-  onDeleteTask,
   onToggleTaskModal,
-  onToggleTaskUpdate,
-  addTaskToSection,
-  setTaskSectionIdSelected,
-  setTaskErrorMessage,
+  enableRefreshTasks,
+  setPreventRefreshTasks,
   setTaskSections,
   setTaskViewType,
   setSearchQuery,
   setTask,
+  // query actions
+  filterTasksByStatus,
+  setTaskById,
+  setProfile,
+  setUsers,
 } = appSlice.actions;
 
 export default appSlice.reducer;

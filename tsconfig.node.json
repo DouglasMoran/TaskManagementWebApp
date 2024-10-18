@@ -14,15 +14,29 @@
 
     "typeRoots": ["./src/@types", "./src/interfaces"],
 
+    "baseUrl": "./src",
+    "paths": {
+      "@api/*": ["api/*"],
+      "@assets/*": ["assets/*"],
+      "@commons/*": ["commons/*"],
+      "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
+      "@hooks/*": ["hooks/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@mocks/*": ["mocks/*"],
+      "@pages/*": ["pages/*"],
+      "@routes/*": ["routes/*"],
+      "@services/*": ["services/*"],
+      "@store/*": ["store/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": [
-    "src/**/*",
-    "src/interfaces/components.types.d.ts",
-    "src/interfaces/app.d.ts"
-  ]
+  "include": ["src/**/*", "src/interfaces/**/*"]
 }
