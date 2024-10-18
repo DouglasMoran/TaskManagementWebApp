@@ -1,7 +1,8 @@
 import { LiaPlusSolid } from 'react-icons/lia';
 
 import TaskDialog from '@components/organisms/TaskDialog';
-import { ToggleButton, Button } from '@components/atoms';
+import ToggleButton from '@components/atoms/ToggleButton';
+import Button from '@components/atoms/Button';
 
 import useTask from '@hooks/useTask';
 
@@ -25,6 +26,7 @@ const ActionButtons = () => {
         <TaskDialog.AssigneeButton />
         <TaskDialog.LabelButton />
         <TaskDialog.CalendarButton />
+        <TaskDialog.TaskStatusButton />
       </TaskDialog>
     </div>
   );

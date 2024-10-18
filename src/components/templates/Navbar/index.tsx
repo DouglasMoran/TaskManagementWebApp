@@ -3,8 +3,11 @@ import { RiNotification3Line } from 'react-icons/ri';
 import Searchbar from '@components/organisms/Searchbar';
 import IconButton from '@components/atoms/IconButton';
 import Avatar from '@components/atoms/Avatar';
+import useProfile from '@hooks/useProfile';
 
 const Navbar = () => {
+  const { profile } = useProfile();
+
   return (
     <div className="flex h-16 w-full flex-row items-center justify-between rounded-[16px] bg-neutral-4 px-6">
       <Searchbar />
@@ -18,7 +21,7 @@ const Navbar = () => {
           }
           onClick={() => null}
         />
-        <Avatar url="" />
+        <Avatar url={profile?.avatar ?? ''} />
       </div>
     </div>
   );

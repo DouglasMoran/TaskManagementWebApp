@@ -1,22 +1,24 @@
 import { useCallback } from 'react';
 
-import { ITask, ITaskEstimate } from '@interfaces/app';
+import { FaCarBattery } from 'react-icons/fa';
 
-import { ESTIMATES_LIST } from '@mocks/task';
+import { ITask, PopoverType, TaskPointEstimate } from '@interfaces/app';
+
+import { TASK_POINT_ESTIMATES } from '@mocks/task';
 
 type EstimateListProps = {
-  data?: ITaskEstimate[];
+  data?: PopoverType<TaskPointEstimate>[];
   onSelect: (task: Partial<ITask>) => void;
 };
 
 const EstimateList = ({
-  data = ESTIMATES_LIST,
+  data = TASK_POINT_ESTIMATES,
   onSelect,
 }: EstimateListProps) => {
   const handleSelectMember = useCallback(
-    (member: Pick<ITaskEstimate, 'id' | 'value' | 'label'>) => {
-      if (member) {
-        onSelect({ points: member });
+    (pointEstimate: PopoverType<TaskPointEstimate>) => {
+      if (pointEstimate) {
+        onSelect({ pointEstimate });
       }
     },
     [onSelect],
@@ -24,15 +26,15 @@ const EstimateList = ({
 
   return (
     <div className="mt-2 flex flex-col gap-2">
-      {data.map((item: ITaskEstimate) => {
-        const { id, label, icon, value } = item ?? {};
+      {data.map((item: PopoverType<TaskPointEstimate>) => {
+        const { label, value } = item ?? {};
         return (
           <div
-            key={id}
-            onClick={() => handleSelectMember({ id, label, value })}
+            key={value}
+            onClick={() => handleSelectMember(item)}
             className="flex w-full flex-row gap-4 text-neutral-1 hover:bg-neutral-2"
           >
-            {icon}
+            <FaCarBattery className="h-6 w-6 text-neutral-1" />
             <p>{label}</p>
           </div>
         );

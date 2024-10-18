@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { ImCancelCircle } from 'react-icons/im';
 import { BiSearch } from 'react-icons/bi';
 
-import { IconButton } from '@components/atoms';
+import IconButton from '@components/atoms/IconButton';
 
 import { setSearchQuery } from '@store/slices/task/taskSlice';
 import { MainState, useAppDispatch } from '@store/index';
